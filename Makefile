@@ -2,6 +2,7 @@ install:
 	npm ci
 
 run:
+	node --experimental-json-modules .
 
 test:
 	npm test

@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "description": "Node.js boilerplate package",
   "bin": {
-    "nodejs-package": "bin/nodejs-package.js"
+    "reckoner": "bin/reckoner.js"
   },
   "engines": {
     "node": ">=14"
@@ -11,14 +11,15 @@
   "scripts": {
     "test": "npx jest"
   },
-  "repository": {
-  },
+  "repository": {},
   "author": "",
   "license": "ISC",
-  "bugs": {
-  },
+  "bugs": {},
   "type": "module",
-  "dependencies": {},
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "lodash": "^4.17.21"
+  },
   "devDependencies": {
     "@jest/globals": "^27.0.1",
     "eslint": "^7.27.0",
