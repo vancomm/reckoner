@@ -1,0 +1,31 @@
+{
+  "name": "@hexlet/nodejs-package",
+  "version": "0.0.3",
+  "description": "Node.js boilerplate package",
+  "bin": {
+    "nodejs-package": "bin/nodejs-package.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "npx jest"
+  },
+  "repository": {
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+  },
+  "type": "module",
+  "dependencies": {},
+  "devDependencies": {
+    "@jest/globals": "^27.0.1",
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jest": "^24.3.6",
+    "jest": "^27.0.1",
+    "jest-cli": "^27.0.1"
+  }
+}
