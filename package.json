@@ -1,7 +1,7 @@
 {
-  "name": "@hexlet/nodejs-package",
-  "version": "0.0.3",
-  "description": "Node.js boilerplate package",
+  "name": "reckoner",
+  "version": "0.0.1",
+  "description": "Split-check CLI utility",
   "bin": {
     "reckoner": "bin/reckoner.js"
   },
@@ -17,8 +17,7 @@
   "bugs": {},
   "type": "module",
   "dependencies": {
-    "inquirer": "^8.2.0",
-    "lodash": "^4.17.21"
+    "inquirer": "^8.2.0"
   },
   "devDependencies": {
     "@jest/globals": "^27.0.1",

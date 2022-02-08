@@ -1,5 +1,4 @@
 import inquirer from 'inquirer';
-import * as data from '../file.json';
 
 const getDistinctItems = (items) => items.reduce((acc, item) => {
   const index = acc.findIndex((i) => i.name === item.name);
@@ -18,9 +17,7 @@ const printTotal = (totals) => {
   totals.forEach(({ user, total }) => console.log(`${user}:\t${total / 100}`));
 };
 
-export default async () => {
-  const users = ['Vanek', 'Zhenek'];
-
+export default async (users, data) => {
   const items = getDistinctItems(data.default[0].ticket.document.receipt.items);
 
   const questions = items.map((item) => ({

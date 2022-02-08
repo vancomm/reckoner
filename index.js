@@ -1,3 +1,6 @@
 import reckon from './src/reckon.js';
+import * as data from './file.json';
 
-reckon();
+const users = ['Vanek', 'Zhenek'];
+
+reckon(users, data);
