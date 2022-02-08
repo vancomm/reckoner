@@ -1,3 +1,3 @@
-import run from './src/run.js';
+import reckon from './src/reckon.js';
 
-run();
+reckon();
