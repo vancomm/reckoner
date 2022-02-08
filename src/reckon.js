@@ -9,10 +9,14 @@ const getDistinctItems = (items) => items.reduce((acc, item) => {
   return acc;
 }, []);
 
-const getTotal = (items, user) => items.reduce((acc, item) => {
-  if (item.owners.includes(user)) return acc + item.sum / item.owners.length;
-  return acc;
+const getTotal = (items, user) => items.reduce((acc, { sum, owners }) => {
+  if (!owners.includes(user)) return acc;
+  return acc + sum / owners.length;
 }, 0);
+
+const printTotal = (totals) => {
+  totals.forEach(({ user, total }) => console.log(`${user}:\t${total / 100}`));
+};
 
 export default async () => {
   const users = ['Vanek', 'Zhenek'];
@@ -39,5 +43,5 @@ export default async () => {
     total: getTotal(assignedItems, user),
   }));
 
-  console.log(totals);
+  printTotal(totals);
 };
