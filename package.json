@@ -1,5 +1,5 @@
 {
-  "name": "reckoner",
+  "name": "vancomm_reckoner",
   "version": "0.0.1",
   "description": "Split-check CLI utility",
   "bin": {
