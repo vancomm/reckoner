@@ -1,6 +1,6 @@
 {
   "name": "vancomm_reckoner",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Split-check CLI utility",
   "bin": {
     "reckoner": "bin/reckoner.js"
