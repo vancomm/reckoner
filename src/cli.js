@@ -13,7 +13,7 @@ async function getData() {
   return JSON.parse(data);
 }
 
-function getAnswers(users, items) {
+async function getAnswers(users, items) {
   const questions = items.map((item) => ({
     type: 'checkbox',
     name: item.name.replaceAll('.', '·'),
@@ -21,7 +21,8 @@ function getAnswers(users, items) {
     choices: users,
     validate: (answers) => (answers.length > 0 ? true : 'You must select at least one option!'),
   }));
-  return inquirer.prompt(questions);
+  const answers = await inquirer.prompt(questions);
+  return answers;
 }
 
 export default async function cli() {
