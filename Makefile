@@ -2,7 +2,7 @@ install:
 	npm ci
 
 run:
-	node --experimental-json-modules .
+	./bin/reckoner.js
 
 test:
 	npm test

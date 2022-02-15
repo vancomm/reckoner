@@ -1,5 +1,3 @@
-import inquirer from 'inquirer';
-
 const getDistinctItems = (items) => items.reduce((acc, item) => {
   const index = acc.findIndex((i) => i.name === item.name);
   if (index === -1) return [...acc, item];
@@ -13,22 +11,18 @@ const getTotal = (items, user) => items.reduce((acc, { sum, owners }) => {
   return acc + sum / owners.length;
 }, 0);
 
-const printTotal = (totals) => {
-  totals.forEach(({ user, total }) => console.log(`${user}:\t${total / 100}`));
-};
+export default async function reckon(users, data, getAnswers) {
+  const items = getDistinctItems(data[0].ticket.document.receipt.items);
 
-export default async (users, data) => {
-  const items = getDistinctItems(data.default[0].ticket.document.receipt.items);
-
-  const questions = items.map((item) => ({
-    type: 'checkbox',
-    name: item.name.replaceAll('.', '·'),
-    message: `${item.name}\nWhose item is this?`,
-    choices: users,
-    validate: (answers) => (answers.length > 0 ? true : 'You must select at least one option!'),
-  }));
-
-  const answers = await inquirer.prompt(questions);
+  /* getAnswers function must return an object of the following format:
+      {
+        'item1': [ 'userA', 'userB' ],
+        'item2': [ 'userA' ],
+        'item3': [ 'userB' ],
+        ...
+      }
+  */
+  const answers = await getAnswers(users, items);
 
   const assignedItems = items.map((item) => {
     const owners = answers[item.name.replaceAll('.', '·')];
@@ -40,5 +34,5 @@ export default async (users, data) => {
     total: getTotal(assignedItems, user),
   }));
 
-  printTotal(totals);
-};
+  return totals;
+}
