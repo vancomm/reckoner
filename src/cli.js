@@ -1,38 +1,35 @@
-import { readFile } from 'fs/promises';
-import inquirer from 'inquirer';
+import { writeFile } from 'fs/promises';
+import { program } from 'commander';
+import yaml from 'js-yaml';
 import reckon from './reckon.js';
-import format from './format.js';
 
-async function getUsers() {
-  return ['Vanek', 'Zhenek'];
+const defaultReceiptPath = './file.json';
+const defaultUserListPath = './users.yml';
+
+async function createUserlist(users, path) {
+  const content = yaml.dump(users);
+  await writeFile(path, content);
 }
 
-async function getData() {
-  const path = '/home/vancomm/reckoner/file.json';
-  const data = await readFile(path);
-  return JSON.parse(data);
-}
+export default () => {
+  program
+    .option('-r, --receipt <path>', 'path to receipt', defaultReceiptPath)
+    .option('-u, --userlist <path>', 'path to list of users', defaultUserListPath)
+    .action(async ({ receipt, userlist }) => {
+      await reckon(receipt, userlist)
+        .then(console.log)
+        .catch((err) => console.log(err.message));
+    });
 
-async function getAnswers(users, items) {
-  const questions = items.map((item) => ({
-    type: 'checkbox',
-    name: item.name.replaceAll('.', '·'),
-    message: `${item.name}\nWhose item is this?`,
-    choices: users,
-    validate: (answers) => (answers.length > 0 ? true : 'You must select at least one option!'),
-  }));
-  const answers = await inquirer.prompt(questions);
-  return answers;
-}
-
-export default async function cli() {
-  const users = await getUsers();
-
-  const data = await getData();
-
-  const result = await reckon(users, data, getAnswers);
-
-  const output = format(result);
-
-  console.log(output);
-}
+  program
+    .command('users')
+    .description('create a list of users')
+    .argument('<users...>')
+    .option('-p, --path <path>', 'path to new list', './users.yml')
+    .action(async (users, { path }) => {
+      await createUserlist(users, path)
+        .then(() => console.log(`Created a userlist at ${path}!`))
+        .catch((err) => console.log(err));
+    });
+  program.parse();
+};

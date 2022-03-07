@@ -8,9 +8,6 @@
   "engines": {
     "node": ">=14"
   },
-  "scripts": {
-    "test": "npx jest"
-  },
   "repository": {},
   "author": "",
   "license": "ISC",
@@ -18,16 +15,14 @@
   "type": "module",
   "dependencies": {
     "axios": "^0.25.0",
+    "commander": "^9.0.0",
     "inquirer": "^8.2.0",
+    "js-yaml": "^4.1.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {
-    "@jest/globals": "^27.0.1",
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-jest": "^24.3.6",
-    "jest": "^27.0.1",
-    "jest-cli": "^27.0.1"
+    "eslint-plugin-import": "^2.23.3"
   }
 }
