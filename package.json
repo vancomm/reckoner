@@ -1,9 +1,9 @@
 {
   "name": "vancomm_reckoner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Split-check CLI utility",
   "bin": {
-    "reckoner": "bin/reckoner.js"
+    "reckon": "bin/reckoner.js"
   },
   "engines": {
     "node": ">=14"

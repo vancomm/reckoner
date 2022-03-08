@@ -1,50 +1,54 @@
-import inquirer from 'inquirer';
-import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
+import inquirer from 'inquirer';
 import getParser from './parsers.js';
+import getFormatter from './formatters/index.js';
 
-async function getData(path) {
-  if (!existsSync(path)) throw new Error(`Receipt not found at ${path}!`);
-  const data = await readFile(path);
+async function readUsers(path) {
+  const raw = await readFile(path);
   const parse = getParser(path);
-  return parse(data);
+  return parse(raw);
 }
 
-async function getUsers(path) {
-  const defaultUsers = ['Vanek', 'Zhenek'];
-  if (!existsSync(path)) {
-    console.log(`Userlist not found at ${path}, using the default list:\n  ${defaultUsers.join('\n  ')}`);
-    return defaultUsers;
-  }
-  const data = await readFile(path);
+async function readItems(path, { merge }) {
+  const raw = await readFile(path);
   const parse = getParser(path);
-  return parse(data);
+  const data = parse(raw);
+  const { items } = data[0].ticket.document.receipt;
+
+  if (!merge) return items;
+
+  return items.reduce((acc, item) => {
+    const index = acc.findIndex((i) => i.name === item.name);
+    if (index === -1) return [...acc, item];
+    acc[index].quantity += item.quantity;
+    acc[index].sum = Math.round(acc[index].quantity * acc[index].price);
+    return acc;
+  }, []);
 }
-
-const getDistinctItems = (items) => items.reduce((acc, item) => {
-  const index = acc.findIndex((i) => i.name === item.name);
-  if (index === -1) return [...acc, item];
-  acc[index].quantity += item.quantity;
-  acc[index].sum = Math.round(acc[index].quantity * acc[index].price);
-  return acc;
-}, []);
-
-const getTotal = (items, user) => items.reduce((acc, { sum, owners }) => {
-  if (!owners.includes(user)) return acc;
-  return acc + sum / owners.length;
-}, 0);
 
 const sanitizeName = (name) => name.replaceAll('.', '·');
 
-async function getAssignedItems(items, users) {
-  const questions = items.map((item) => ({
+const getQuestion = (item, choices, detailed) => {
+  const { name, quantity } = item;
+  const price = item.price / 100;
+  const sumText = (quantity === 1)
+    ? ''
+    : ` (${item.sum / 100}RUB)`;
+  const message = (detailed) ? `${quantity} x ${name} @ ${price}RUB${sumText}\n` : `${quantity} x ${name}\n`;
+
+  return {
     type: 'checkbox',
     name: sanitizeName(item.name),
-    message: `${item.name} x ${item.quantity}\nWhose item is this?`,
-    choices: users,
+    message,
+    choices,
     validate: (answers) => (answers.length > 0 ? true : 'You must select at least one option!'),
-  }));
+  };
+};
 
+async function assignItems(items, users, { detailed }) {
+  const questions = items.map((item) => getQuestion(item, users, detailed));
+
+  // eslint-disable-next-line no-console
   console.log('Items:');
   const itemUserMap = await inquirer.prompt(questions);
 
@@ -55,26 +59,27 @@ async function getAssignedItems(items, users) {
   });
 }
 
-function format(totals) {
-  return totals.map(({ user, total }) => `${user}:\t${total / 100}`)
-    .join('\n');
+function getOutput(items, { format }) {
+  return (getFormatter(format))(items);
 }
 
-export default async function reckon(receiptPath, userlistPath) {
-  const data = await getData(receiptPath);
+/**
+ *
+ * @param {string} receiptPath Path to file containing a receipt
+ * @param {string} userlistPath Path to file containing a list of users
+ * @param {boolean} options.merge Option to merge identical items
+ * @param {boolean} options.detailed Option to show a detailed description of item
+ * @param {string} options.format Option to choose a style of output format
+ * @returns
+ */
+export default async function reckon(receiptPath, userlistPath, options) {
+  const items = await readItems(receiptPath, options);
 
-  const users = await getUsers(userlistPath);
+  const users = await readUsers(userlistPath);
 
-  const items = getDistinctItems(data[0].ticket.document.receipt.items);
+  const assignedItems = await assignItems(items, users, options);
 
-  const assignedItems = await getAssignedItems(items, users);
-
-  const result = users.map((user) => ({
-    user,
-    total: getTotal(assignedItems, user),
-  }));
-
-  const output = format(result);
+  const output = getOutput(assignedItems, options);
 
   return (output);
 }
