@@ -1,10 +1,10 @@
 import { readFile } from 'fs/promises';
-import inquirer from 'inquirer';
+import inquirer, { CheckboxQuestion } from 'inquirer';
 import getParser from './parsers.js';
 import getFormatter from './formatters/index.js';
 import { AssignedItem, Item, Options } from './types.js';
 
-async function readUsers(path: string) {
+async function readUsers(path: string): Promise<string[]> {
   const raw = await readFile(path);
   const parse = getParser(path);
   return parse(raw.toString());
@@ -29,9 +29,11 @@ async function readItems(path: string, options: Options): Promise<Item[]> {
   }, []);
 }
 
-const sanitizeName = (name: string) => name.replaceAll('.', '·');
+function sanitizeName(name: string) {
+  return name.replaceAll('.', '·');
+}
 
-const getQuestion = (item: Item, choices: string[], detailed: boolean) => {
+const getQuestion = (item: Item, choices: string[], detailed: boolean): CheckboxQuestion => {
   const { name, quantity } = item;
   const price = item.price / 100;
   const sumText = (quantity === 1)
@@ -48,7 +50,7 @@ const getQuestion = (item: Item, choices: string[], detailed: boolean) => {
   };
 };
 
-async function assignItems(items: Item[], users: string[], options: Options) {
+async function assignItems(items: Item[], users: string[], options: Options): Promise<AssignedItem[]> {
   const { detailed } = options;
 
   const questions = items.map((item) => getQuestion(item, users, detailed));
@@ -70,15 +72,6 @@ function getOutput(items: AssignedItem[], options: Options): string {
   return (getFormatter(format))(items);
 }
 
-/**
- *
- * @param {string} receiptPath Path to file containing a receipt
- * @param {string} userlistPath Path to file containing a list of users
- * @param {boolean} options.merge Option to merge identical items
- * @param {boolean} options.detailed Option to show a detailed description of item
- * @param {string} options.format Option to choose a style of output format
- * @returns
- */
 export default async function reckon(receiptPath: string, userlistPath: string, options: Options): Promise<string> {
   const items = await readItems(receiptPath, options);
 
