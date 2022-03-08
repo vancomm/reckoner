@@ -8,7 +8,7 @@ import reckon from './reckon.js';
 const defaultReceiptPath = './file.json';
 const defaultUserListPath = './users.yml';
 
-async function createUserlist(users, path) {
+async function createUserlist(users: string, path: string) {
   const content = yaml.dump(users);
   await writeFile(path, content);
 }

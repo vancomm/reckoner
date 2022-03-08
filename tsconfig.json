@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "es2020",
+    "lib": [
+      "es2021"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

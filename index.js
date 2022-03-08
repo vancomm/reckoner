@@ -1,3 +1,3 @@
-import reckon from './src/reckon.js';
+import reckon from './built/reckon.js';
 
 export default reckon;
