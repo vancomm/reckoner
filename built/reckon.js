@@ -37,7 +37,9 @@ function readItems(path, options) {
         }, []);
     });
 }
-const sanitizeName = (name) => name.replaceAll('.', '·');
+function sanitizeName(name) {
+    return name.replaceAll('.', '·');
+}
 const getQuestion = (item, choices, detailed) => {
     const { name, quantity } = item;
     const price = item.price / 100;
@@ -71,15 +73,6 @@ function getOutput(items, options) {
     const { format } = options;
     return (getFormatter(format))(items);
 }
-/**
- *
- * @param {string} receiptPath Path to file containing a receipt
- * @param {string} userlistPath Path to file containing a list of users
- * @param {boolean} options.merge Option to merge identical items
- * @param {boolean} options.detailed Option to show a detailed description of item
- * @param {string} options.format Option to choose a style of output format
- * @returns
- */
 export default function reckon(receiptPath, userlistPath, options) {
     return __awaiter(this, void 0, void 0, function* () {
         const items = yield readItems(receiptPath, options);

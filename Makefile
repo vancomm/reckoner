@@ -1,7 +1,10 @@
 install:
 	npm ci
 
-run:
+build:
+	tsc
+
+run: build
 	./bin/reckoner.js
 
 publish:
