@@ -2,22 +2,25 @@ import { readFile } from 'fs/promises';
 import inquirer from 'inquirer';
 import getParser from './parsers.js';
 import getFormatter from './formatters/index.js';
+import { AssignedItem, Item, Options } from './types.js';
 
-async function readUsers(path) {
+async function readUsers(path: string) {
   const raw = await readFile(path);
   const parse = getParser(path);
-  return parse(raw);
+  return parse(raw.toString());
 }
 
-async function readItems(path, { merge }) {
+async function readItems(path: string, options: Options): Promise<Item[]> {
+  const { merge } = options;
+
   const raw = await readFile(path);
   const parse = getParser(path);
-  const data = parse(raw);
+  const data = parse(raw.toString());
   const { items } = data[0].ticket.document.receipt;
 
   if (!merge) return items;
 
-  return items.reduce((acc, item) => {
+  return items.reduce((acc: any[], item: Item) => {
     const index = acc.findIndex((i) => i.name === item.name);
     if (index === -1) return [...acc, item];
     acc[index].quantity += item.quantity;
@@ -26,9 +29,9 @@ async function readItems(path, { merge }) {
   }, []);
 }
 
-const sanitizeName = (name) => name.replaceAll('.', '·');
+const sanitizeName = (name: string) => name.replaceAll('.', '·');
 
-const getQuestion = (item, choices, detailed) => {
+const getQuestion = (item: Item, choices: string[], detailed: boolean) => {
   const { name, quantity } = item;
   const price = item.price / 100;
   const sumText = (quantity === 1)
@@ -41,11 +44,13 @@ const getQuestion = (item, choices, detailed) => {
     name: sanitizeName(item.name),
     message,
     choices,
-    validate: (answers) => (answers.length > 0 ? true : 'You must select at least one option!'),
+    validate: (answers: any[]) => (answers.length > 0 ? true : 'You must select at least one option!'),
   };
 };
 
-async function assignItems(items, users, { detailed }) {
+async function assignItems(items: Item[], users: string[], options: Options) {
+  const { detailed } = options;
+
   const questions = items.map((item) => getQuestion(item, users, detailed));
 
   // eslint-disable-next-line no-console
@@ -59,7 +64,9 @@ async function assignItems(items, users, { detailed }) {
   });
 }
 
-function getOutput(items, { format }) {
+function getOutput(items: AssignedItem[], options: Options): string {
+  const { format } = options;
+
   return (getFormatter(format))(items);
 }
 
@@ -72,7 +79,7 @@ function getOutput(items, { format }) {
  * @param {string} options.format Option to choose a style of output format
  * @returns
  */
-export default async function reckon(receiptPath, userlistPath, options) {
+export default async function reckon(receiptPath: string, userlistPath: string, options: Options): Promise<string> {
   const items = await readItems(receiptPath, options);
 
   const users = await readUsers(userlistPath);
