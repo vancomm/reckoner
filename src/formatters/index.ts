@@ -1,7 +1,7 @@
 import short from './short.js';
-import { Options } from '../types.js';
+import { AssignedItem, Options } from '../types.js';
 
-export default function getFormatter(format: Options['format']) {
+export default function getFormatter(format: Options['format']): (items: AssignedItem[]) => string {
   switch (format) {
     case 'short':
     default:
