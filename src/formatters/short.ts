@@ -1,6 +1,6 @@
 import { AssignedItem } from '../types.js';
 
-export default function short(items: AssignedItem[]) {
+export default function short(items: AssignedItem[]): string {
   const userTotals = items.reduce((acc: { [key: string]: number }, { owners, sum }) => {
     const amount = sum / owners.length;
     owners.forEach((owner) => {
