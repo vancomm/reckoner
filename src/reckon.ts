@@ -29,17 +29,24 @@ async function readItems(path: string, options: Options): Promise<Item[]> {
   }, []);
 }
 
-function sanitizeName(name: string) {
+function sanitizeName(name: string): string {
   return name.replaceAll('.', '·');
 }
 
 const getQuestion = (item: Item, choices: string[], detailed: boolean): CheckboxQuestion => {
   const { name, quantity } = item;
   const price = item.price / 100;
-  const sumText = (quantity === 1)
+  const moreThanOne = (quantity === 1);
+  const quantityText = moreThanOne
     ? ''
-    : ` (${item.sum / 100}RUB)`;
-  const message = (detailed) ? `${quantity} x ${name} @ ${price}RUB${sumText}\n` : `${quantity} x ${name}\n`;
+    : `Quantity:\t${quantity}`;
+  const sumText = moreThanOne
+    ? ''
+    : `Sum:\t(${item.sum / 100}RUB)`;
+
+  const message = (detailed)
+    ? `\t${name}\nPrice:\t${price} RUB\n${quantityText}\n${sumText}`
+    : `${quantity} x ${name}`;
 
   return {
     type: 'checkbox',
