@@ -4,18 +4,19 @@ import getParser from './parsers.js';
 import getFormatter from './formatters/index.js';
 import { AssignedItem, Item, Options } from './types.js';
 
-async function readUsers(path: string): Promise<string[]> {
-  const raw = await readFile(path);
-  const parse = getParser(path);
+async function readUsers(filepath: string): Promise<string[]> {
+  const raw = await readFile(filepath);
+  const parse = getParser(filepath);
   return parse(raw.toString());
 }
 
-async function readItems(path: string, options: Options): Promise<Item[]> {
+async function readItems(filepath: string, options: Options): Promise<Item[]> {
   const { merge } = options;
 
-  const raw = await readFile(path);
-  const parse = getParser(path);
+  const raw = await readFile(filepath);
+  const parse = getParser(filepath);
   const data = parse(raw.toString());
+
   const { items } = data[0].ticket.document.receipt;
 
   if (!merge) return items;
@@ -33,7 +34,7 @@ function sanitizeName(name: string): string {
   return name.replaceAll('.', '·');
 }
 
-const getQuestion = (item: Item, choices: string[], detailed: boolean): CheckboxQuestion => {
+function getQuestion(item: Item, choices: string[], detailed: boolean): CheckboxQuestion {
   const { name, quantity } = item;
   const price = item.price / 100;
   const moreThanOne = (quantity === 1);
