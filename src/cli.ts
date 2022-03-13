@@ -18,10 +18,9 @@ export default () => {
     .option('-r, --receipt <path>', 'path to receipt', defaultReceiptPath)
     .option('-u, --userlist <path>', 'path to list of users', defaultUserListPath)
     .option('-f, --format <type>', 'output format', 'short')
+    .option('-s, --style <type>', 'style for receipt item output', 'table')
     .option('--merge', 'merge identical items', true)
     .option('--no-merge', 'do not merge identical items')
-    .option('--detailed', 'show detailed descriptions of items', true)
-    .option('--no-detailed', 'do not show detailed descriptions of items')
     .action(async (options) => {
       const { receipt, userlist, ...rest } = options;
       if (!existsSync(receipt)) {

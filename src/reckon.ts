@@ -1,8 +1,10 @@
 import { readFile } from 'fs/promises';
-import inquirer, { CheckboxQuestion } from 'inquirer';
 import getParser from './parsers/index.js';
 import getFormatter from './formatters/index.js';
 import { AssignedItem, Item, Options } from './types.js';
+import {
+  applyAnswers, askAnswers, getQuestionMaker, getQuestionsHeader, showHeader,
+} from './question/index.js';
 
 async function readUsers(filepath: string): Promise<string[]> {
   const raw = await readFile(filepath);
@@ -30,48 +32,22 @@ async function readItems(filepath: string, options: Options): Promise<Item[]> {
   }, []);
 }
 
-function sanitizeName(name: string): string {
-  return name.replaceAll('.', '·');
-}
-
-function getQuestion(item: Item, choices: string[], detailed: boolean): CheckboxQuestion {
-  const { name, quantity } = item;
-  const price = item.price / 100;
-  const moreThanOne = (quantity === 1);
-  const quantityText = moreThanOne
-    ? ''
-    : `Quantity:\t${quantity}`;
-  const sumText = moreThanOne
-    ? ''
-    : `Sum:\t(${item.sum / 100}RUB)`;
-
-  const message = (detailed)
-    ? `\t${name}\nPrice:\t${price} RUB\n${quantityText}\n${sumText}`
-    : `${quantity} x ${name}`;
-
-  return {
-    type: 'checkbox',
-    name: sanitizeName(item.name),
-    message,
-    choices,
-    validate: (answers: any[]) => (answers.length > 0 ? true : 'You must select at least one option!'),
-  };
-};
-
 async function assignItems(items: Item[], users: string[], options: Options): Promise<AssignedItem[]> {
-  const { detailed } = options;
+  const { style } = options;
 
-  const questions = items.map((item) => getQuestion(item, users, detailed));
+  const header = getQuestionsHeader(style);
 
-  // eslint-disable-next-line no-console
-  console.log('Items:');
-  const itemUserMap = await inquirer.prompt(questions);
+  const getQuestion = getQuestionMaker(style);
 
-  return items.map((item) => {
-    const name = sanitizeName(item.name);
-    const owners = itemUserMap[name];
-    return { ...item, owners };
-  });
+  const questions = items.map((item) => getQuestion(item, users));
+
+  showHeader(header);
+
+  const answers = await askAnswers(questions);
+
+  const assignedItems = applyAnswers(items, answers);
+
+  return assignedItems;
 }
 
 function getOutput(items: AssignedItem[], options: Options): string {

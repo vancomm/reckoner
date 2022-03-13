@@ -1,7 +1,8 @@
 export interface Options {
   merge: boolean,
   detailed: boolean,
-  format: 'short'
+  style: 'table' | 'atomic' | 'minimal',
+  format: 'short',
 }
 
 export interface Item {
@@ -11,9 +12,9 @@ export interface Item {
   price: number,
   paymentType: number,
   name: string,
-  sum: number
+  sum: number,
 }
 
 export interface AssignedItem extends Item {
-  owners: string[]
+  owners: string[],
 }
