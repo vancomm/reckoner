@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import inquirer, { CheckboxQuestion } from 'inquirer';
-import getParser from './parsers.js';
+import getParser from './parsers/index.js';
 import getFormatter from './formatters/index.js';
 import { AssignedItem, Item, Options } from './types.js';
 
