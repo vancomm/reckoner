@@ -34,7 +34,7 @@ export default () => {
       }
       await reckon(receipt, userlist, rest)
         .then(console.log)
-        .catch(console.log);
+        .catch(({ message }) => console.log(message));
     });
 
   program
