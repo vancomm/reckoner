@@ -1,6 +1,6 @@
 import { CheckboxQuestion } from 'inquirer';
 import { Item } from '../types.js';
-import { makeCheckboxQuestion } from './utils.js';
+import { makeCheckboxQuestion } from './make-checkbox.js';
 
 export default function atomic(item: Item, choices: string[]): CheckboxQuestion {
   const { name, quantity } = item;

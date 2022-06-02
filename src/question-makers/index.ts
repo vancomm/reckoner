@@ -1,6 +1,6 @@
 import inquirer, { Answers, CheckboxQuestion, Question } from 'inquirer';
 import { AssignedItem, Item, Options } from '../types.js';
-import * as utils from './utils.js';
+import { sanitizeName } from '../utils/index.js';
 import atomic from './atomic.js';
 import table from './table.js';
 import minimal from './minimal.js';
@@ -28,18 +28,13 @@ export function getQuestionsHeader(style: string): string {
   }
 }
 
-export function showHeader(header: string): void {
-  // eslint-disable-next-line no-console
-  console.log(header);
-}
-
-export async function askAnswers(questions: Question[]) {
+export async function getAnswers(questions: Question[]) {
   return inquirer.prompt(questions);
 }
 
 export function applyAnswers(items: Item[], answers: Answers): AssignedItem[] {
   return items.map((item) => {
-    const name = utils.sanitizeName(item.name);
+    const name = sanitizeName(item.name);
     const owners = answers[name];
     return { ...item, owners };
   });

@@ -1,6 +1,5 @@
-import { CheckboxQuestion } from 'inquirer';
 import { Item } from '../types.js';
-import { makeCheckboxQuestion } from './utils.js';
+import { makeCheckboxQuestion } from './make-checkbox.js';
 
 const NAME_LENGTH = 32;
 
@@ -12,7 +11,7 @@ function splitName(name: string): [string, string | undefined] {
   return [first, second];
 }
 
-export default function table(item: Item, choices: string[]): CheckboxQuestion {
+export default function table(item: Item, choices: string[]) {
   const { name, quantity } = item;
 
   const [name1, name2] = splitName(name);

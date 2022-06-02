@@ -3,8 +3,8 @@ import getParser from './parsers/index.js';
 import getFormatter from './formatters/index.js';
 import { AssignedItem, Item, Options } from './types.js';
 import {
-  applyAnswers, askAnswers, getQuestionMaker, getQuestionsHeader, showHeader,
-} from './question/index.js';
+  applyAnswers, getAnswers, getQuestionMaker, getQuestionsHeader,
+} from './question-makers/index.js';
 
 async function readUsers(filepath: string): Promise<string[]> {
   const raw = await readFile(filepath);
@@ -41,9 +41,9 @@ async function assignItems(items: Item[], users: string[], options: Options): Pr
 
   const questions = items.map((item) => getQuestion(item, users));
 
-  showHeader(header);
+  console.log(header);
 
-  const answers = await askAnswers(questions);
+  const answers = await getAnswers(questions);
 
   const assignedItems = applyAnswers(items, answers);
 
