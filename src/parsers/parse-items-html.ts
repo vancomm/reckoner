@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio';
-import { Item } from '../types.js';
 
-export function fromHTML(raw: string) {
+export default function parseItemsHTML(raw: string): Item[] {
   const $ = cheerio.load(raw);
 
   const rows = $('body > div > table > tbody > tr');
@@ -29,8 +28,5 @@ export function fromHTML(raw: string) {
     items.push(item);
   })
 
-  // emulation of a JSON receipt
-  const data = [{ ticket: { document: { receipt: { items } } } }];
-
-  return data;
+  return items;
 }

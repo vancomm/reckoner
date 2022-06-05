@@ -1,6 +1,5 @@
 import { CheckboxQuestion } from 'inquirer';
-import { Item } from '../types.js';
-import { makeCheckboxQuestion } from './utils.js';
+import makeCheckboxQuestion from './make-checkbox.js';
 
 const NAME_LENGTH = 32;
 

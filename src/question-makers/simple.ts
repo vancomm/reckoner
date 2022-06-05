@@ -1,8 +1,7 @@
 import { CheckboxQuestion } from 'inquirer';
-import { Item } from '../types.js';
-import { makeCheckboxQuestion } from './utils.js';
+import makeCheckboxQuestion from './make-checkbox.js';
 
-export default function atomic(item: Item, choices: string[]): CheckboxQuestion {
+export default function simple(item: Item, choices: string[]): CheckboxQuestion {
   const { name, quantity } = item;
   const price = item.price / 100;
   const moreThanOne = (quantity === 1);
