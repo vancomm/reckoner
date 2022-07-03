@@ -2,13 +2,15 @@ install:
 	npm ci
 
 build:
-	tsc
+	npx tsc
 
-run: build
+run: 
 	./bin/reckoner.js
 
+start: build run
+
 publish:
-	npm publish
+	npm publish --dry-run
 
 lint:
 	npx eslint .
