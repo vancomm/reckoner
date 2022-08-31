@@ -60,13 +60,17 @@ const headers: Record<Options['style'], string> = {
 }
 
 function mergeItems(items: Item[]): Item[] {
-  return items.reduce((acc: Item[], item) => {
-    const index = acc.findIndex((i) => i.name === item.name);
-    if (index === -1) return [...acc, item];
-    acc[index].quantity += item.quantity;
-    acc[index].sum = Math.round(acc[index].quantity * acc[index].price);
-    return acc;
-  }, []);
+  return items.slice().reduce((acc, curr) => {
+    const index = acc.findIndex((i) => i.name === curr.name);
+    if (index === -1) return [...acc, curr];
+    const prev = acc[index];
+    const next: Item = {
+      ...prev,
+      quantity: prev.quantity + curr.quantity,
+      sum: prev.sum + curr.sum,
+    };
+    return acc.map((v, i) => (i === index ? next : v));
+  }, [] as Item[]);
 }
 
 function spreadItems(items: Item[]): Item[] {
@@ -106,7 +110,9 @@ export default async function app(
   const userlist = parseUserlist(userlistBuffer.toString());
 
 
-  const sanitizedItems = items.map((item) => { return { ...item, ...{ name: item.name.replaceAll('.', '') } } });
+  const sanitizedItems = items.map((item) => {
+    return { ...item, ...{ name: item.name.replace(/\./g, '') } }
+  });
 
   const makeQuestion = questionMakers[options.style];
 
