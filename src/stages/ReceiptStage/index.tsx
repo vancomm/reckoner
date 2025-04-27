@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Button from '../../components/Button';
 import StageContainer from '../../components/StageContainer';
 import { useAppState } from '../../contexts/AppStateContext';
-import { isSuccessful } from '../../lib/Optional';
 import parseReceipt, { UniqueItem } from '../../lib/parseReceiptDocument';
 import testfile from '../../test-file.json';
 import styles from './ReceiptStage.module.css';
@@ -32,7 +31,7 @@ export default function ReceiptStage({ nextFn }: ReceiptStageProps) {
                 {
                     onClick: () => {
                         const opt = parseReceipt(JSON.stringify(testfile));
-                        if (isSuccessful(opt)) {
+                        if (opt.isOk()) {
                             setReceiptData(opt.value);
                             setErrorMessage('');
                         }
@@ -62,9 +61,9 @@ export default function ReceiptStage({ nextFn }: ReceiptStageProps) {
                         }
                         const content = await inputFile.text();
                         const receiptDataOption = parseReceipt(content);
-                        if (!receiptDataOption.success) {
+                        if (receiptDataOption.isErr()) {
                             setReceiptData(undefined);
-                            setErrorMessage(receiptDataOption.message);
+                            setErrorMessage(receiptDataOption.error);
                             return;
                         }
 

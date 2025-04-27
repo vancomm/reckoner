@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { handleOption } from '../lib/Optional';
 import idbCache from '../lib/idbCache';
 import { UniqueItem } from '../lib/parseReceiptDocument';
 import { AppStateContext } from './AppStateContext';
@@ -119,10 +118,10 @@ export function AppStateProvider({ children }: StateProviderProps) {
 
     const init = async () =>
         Promise.all([
-            idbCache.get('names').then(handleOption(setNames)),
-            idbCache.get('showManual').then(
-                handleOption(
-                    (value) => setShowManual(value),
+            idbCache.get('names').then((r) => r.map(setNames)),
+            idbCache.get('showManual').then((r) =>
+                r.match(
+                    (v) => setShowManual(v),
                     () => {
                         setShowManual(true);
                         idbCache.set('showManual', true);

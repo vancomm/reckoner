@@ -1,16 +1,14 @@
-import scale from './scale';
+function scale(r_min: number, r_max: number, t_min: number, t_max: number) {
+    return function (x: number) {
+        return ((x - r_min) / (r_max - r_min)) * (t_max - t_min) + t_min;
+    };
+}
 
-const scaleSinToColor = scale(0, 1, 128, 255);
+const _scale = scale(0, 1, 128, 255);
 
-const sin = Math.sin;
-
-export default function generateColor(seed: number, saturation = 1, b = 1, c = 1): string {
-    const color = Array(3)
-        .fill(seed)
-        .map((s, i) => saturation * sin((i + 1) * b * (s + c)))
-        .map(scaleSinToColor)
-        .map(Math.round)
-        .map((n) => n.toString(16))
+export default function generateColor(seed: number, sat = 1, b = 1, c = 1): string {
+    const color = [0, 1, 2]
+        .map((i) => Math.round(_scale(sat * Math.sin((i + 1) * b * (seed + c)))).toString(16))
         .join('');
     return `#${color}`;
 }

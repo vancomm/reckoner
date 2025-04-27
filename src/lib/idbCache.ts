@@ -1,10 +1,16 @@
 import * as idb from 'idb-keyval';
-
-import { Optional, makeFailed, makeSuccessful } from './Optional';
-import addHours from './addHours';
+import { Result, err, ok } from 'neverthrow';
 
 const version = 1;
 const hoursUntilStale = -1;
+
+const HOURS_IN_MS = 60 * 60 * 1000;
+
+function addHours(date: Date, hours: number): Date {
+    const added = new Date(date);
+    added.setTime(added.getTime() + hours * HOURS_IN_MS);
+    return added;
+}
 
 export interface IDBCache<T> {
     version: number;
@@ -19,27 +25,27 @@ export interface CacheKeyMap {
 
 export type CacheKey = keyof CacheKeyMap;
 
-async function get<K extends keyof CacheKeyMap, T extends CacheKeyMap[K]>(key: K): Promise<Optional<T>> {
+async function get<K extends keyof CacheKeyMap, T extends CacheKeyMap[K]>(key: K): Promise<Result<T, string>> {
     const value: IDBCache<T> | undefined = await idb.get(key);
 
-    if (!value) return makeFailed('No cached data');
+    if (!value) return err('No cached data');
 
     if (value.version !== version) {
         await del(key);
-        return makeFailed('Cache version outdated');
+        return err('Cache version outdated');
     }
 
-    if (hoursUntilStale < 0) return makeSuccessful(value.data);
+    if (hoursUntilStale < 0) return ok(value.data);
 
     const now = new Date();
     const staleTime = addHours(value.date, hoursUntilStale);
 
     if (now > staleTime) {
         await del(key);
-        return makeFailed('Data stale');
+        return err('Data stale');
     }
 
-    return makeSuccessful(value.data);
+    return ok(value.data);
 }
 
 async function set<K extends keyof CacheKeyMap, T extends CacheKeyMap[K]>(key: K, value: T) {
