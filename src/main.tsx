@@ -2,7 +2,6 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import App from './App';
 import { AppStateProvider } from './contexts/AppStateProvider';
 import { NotificationsProvider } from './contexts/NotificationProvider';
 import './index.css';
@@ -21,18 +20,11 @@ if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <React.StrictMode>
-            <RouterProvider router={router} />
+            <AppStateProvider>
+                <NotificationsProvider>
+                    <RouterProvider router={router} />
+                </NotificationsProvider>
+            </AppStateProvider>
         </React.StrictMode>
     );
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-    <React.StrictMode>
-        <AppStateProvider>
-            <NotificationsProvider>
-                <App />
-            </NotificationsProvider>
-        </AppStateProvider>
-    </React.StrictMode>
-);
