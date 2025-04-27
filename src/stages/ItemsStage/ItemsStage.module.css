@@ -1,0 +1,206 @@
+.optionsCard {
+    width: 100%;
+}
+
+.optionsRows {
+    display: flex;
+    flex-direction: column;
+}
+
+.optionRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.items {
+    width: 100%;
+    display: grid;
+    align-items: start;
+    gap: var(--gap);
+}
+
+@media (min-width: 45rem) {
+    main {
+        padding: 3rem 10% 0;
+    }
+
+    .itemsContainer {
+        width: 100%;
+    }
+
+    .items {
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    }
+}
+
+.itemTitle {
+    font-size: 1.2rem;
+}
+
+.itemSubtitle,
+.itemSubtitle * {
+    font-family: monospace;
+}
+
+.namePickerContainer {
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+}
+
+.namePickerContainer .namePicker {
+    background-color: var(--bg-overlay);
+}
+
+/* :checked~.nameLabel{
+  outline: 3px solid green;
+} */
+
+.namePicker {
+    transition: all 300ms;
+}
+
+.namePicker:hover {
+    background-color: var(--bg-overlay-hover);
+}
+
+.itemCardActions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 0;
+}
+
+.itemCardActions div {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.itemCardActions .itemCardAction:hover {
+    opacity: 1;
+}
+
+.success.itemContainer {
+    background-color: var(--bg-success-secondary);
+}
+
+.success .itemCard {
+    background-color: var(--bg-success);
+}
+
+.success .itemCard * {
+    color: var(--color-success);
+}
+
+.success .itemCardAction {
+    color: var(--color-success);
+    opacity: 0.8;
+}
+
+/* .success :not(:checked)~.nameLabel {
+  color: var(--color-primary);
+} */
+
+.itemCardToggle {
+    visibility: hidden;
+    background: none;
+    transition: background-color 100ms;
+    box-shadow: none !important;
+    /* text-decoration: underline; */
+}
+
+.success .itemCardToggle {
+    visibility: visible;
+    background: var(--bg-overlay-light);
+}
+
+.itemCardToggle:hover {
+    background: var(--bg-overlay-hover);
+}
+
+:checked ~ .itemCardToggle {
+    background: var(--bg-overlay-active) !important;
+    /* background: transparent !important; */
+    /* background: linear-gradient(to bottom, var(--bg-overlay-hover), var(--bg-overlay)) !important; */
+    color: var(--color-primary);
+    /* color: var(--bg-overlay-active); */
+    /* outline: 2px solid white; */
+}
+
+.namePickerContainer.isPrecise {
+    display: flex;
+}
+
+.preciseShareInputContainer {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-overlay-hover);
+    border-radius: 0.4em;
+}
+
+.preciseShareInputContainer * {
+    color: white !important;
+}
+
+.preciseShareInput {
+    width: min-content;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, min-content);
+    grid-auto-flow: column;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 0.4em;
+    user-select: none;
+}
+
+:not(.success) .preciseShareInput * {
+    color: white !important;
+}
+
+.preciseShareInput.checked * {
+    color: var(--color-success) !important;
+}
+
+.share {
+    padding: 0 0.3em;
+    /* border-radius: .3em; */
+    /* background-color: black; */
+}
+
+.share,
+.share * {
+    /* color: white !important; */
+}
+
+/* .share::before {
+  content: "|";
+  margin: 0 .3em;
+  color: var(--color-success);
+  opacity: 0.5;
+} */
+
+.preciseShareInput button {
+    width: 1.1em;
+    aspect-ratio: 1 / 1.1;
+    background: none;
+    font-size: 1.5rem;
+    text-decoration: none;
+    opacity: 1;
+    border-radius: 0.3em;
+}
+
+.preciseShareInput button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.preciseShareInput.checked {
+    background-color: white;
+}
+
+.preciseShareInput.checked button {
+    /* background: none; */
+    /* color: var(--color-primary) !important; */
+}

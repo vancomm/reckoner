@@ -1,0 +1,117 @@
+[
+    {
+        "status": 2,
+        "seller": {
+            "name": "АО ТД Перекресток",
+            "inn": "7728029110",
+            "logo": "\/static\/logo\/77\/7728029110.png"
+        },
+        "operation": {
+            "date": 683229300,
+            "type": 1,
+            "sum": 97291
+        },
+        "id": "630909d1cf01e66955c42431",
+        "organization": {
+            "name": "АО ТД Перекресток",
+            "inn": "7728029110",
+            "logo": "\/static\/logo\/77\/7728029110.png"
+        },
+        "qr": "t=20220826T2055&s=972.91&fn=9960440302402253&i=2208&fp=3240532077&n=1",
+        "query": {
+            "date": "2022-08-26T20:55",
+            "documentId": 2208,
+            "fsId": "9960440302402253",
+            "fiscalSign": "3240532077",
+            "operationType": 1,
+            "sum": 97291
+        },
+        "ticket": {
+            "document": {
+                "receipt": {
+                    "retailPlace": "2198 Индустриальная",
+                    "totalSum": 97291,
+                    "userInn": "7728029110  ",
+                    "code": 3,
+                    "items": [
+                        {
+                            "quantity": 1,
+                            "productType": 1,
+                            "nds": 1,
+                            "price": 5977,
+                            "paymentType": 4,
+                            "name": "товар ва/у всем нужн",
+                            "sum": 5977
+                        },
+                        {
+                            "quantity": 1,
+                            "productType": 1,
+                            "nds": 1,
+                            "price": 5977,
+                            "paymentType": 4,
+                            "name": "товар ва/у всем нужн",
+                            "sum": 5977
+                        },
+                        {
+                            "quantity": 1,
+                            "productType": 1,
+                            "nds": 2,
+                            "price": 8999,
+                            "paymentType": 4,
+                            "name": "дргой товар тоже ..ничего",
+                            "sum": 8999
+                        },
+                        {
+                            "quantity": 1,
+                            "productType": 1,
+                            "nds": 1,
+                            "price": 368864,
+                            "paymentType": 4,
+                            "name": "ой упс дорого очень",
+                            "sum": 368864
+                        },
+                        {
+                            "quantity": 2,
+                            "productType": 1,
+                            "nds": 1,
+                            "price": 10958,
+                            "paymentType": 4,
+                            "name": "товар товар товар ДВА",
+                            "sum": 21916
+                        },
+                        {
+                            "quantity": 1,
+                            "productType": 1,
+                            "nds": 1,
+                            "price": 10959,
+                            "paymentType": 4,
+                            "name": "пакет майка футболка кофта",
+                            "sum": 10959
+                        }
+                    ],
+                    "ecashTotalSum": 97291,
+                    "fiscalDriveNumber": "9960440302402253",
+                    "shiftNumber": 28,
+                    "nds18": 13616,
+                    "kktRegId": "0006601153039413    ",
+                    "provisionSum": 0,
+                    "dateTime": 1661536500,
+                    "requestNumber": 95,
+                    "retailPlaceAddress": "350007, 23 ,Краснодарский край, город Краснодар г.о., Краснодар г, Индустриальная ул, 2 Дом",
+                    "fiscalSign": 3240532077,
+                    "user": "АО ТД Перекресток",
+                    "prepaidSum": 0,
+                    "cashTotalSum": 0,
+                    "fiscalDocumentNumber": 2208,
+                    "operationType": 1,
+                    "fiscalDocumentFormatVer": 4,
+                    "creditSum": 0,
+                    "taxationType": 1,
+                    "nds10": 1418
+                }
+            }
+        },
+        "kind": "kkt",
+        "createdAt": 683229521
+    }
+]

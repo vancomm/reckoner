@@ -1,0 +1,47 @@
+.title {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+}
+
+.buttonContainer {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: calc(var(--gap) / 2);
+}
+
+.button {
+    width: 100%;
+    padding: 0.4em 1em;
+    border: none;
+    border-radius: 0.3em;
+    background-color: var(--bg-overlay);
+    font-size: 1.2rem;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: var(--bg-overlay-hover);
+}
+
+.button:active {
+    background-color: var(--bg-overlay-active);
+}
+
+.next {
+    background-color: rgb(0, 128, 255) !important;
+}
+
+.next:hover,
+.next:focus {
+    filter: brightness(90%);
+}
+
+.next:active {
+    filter: brightness(80%);
+}
+
+.next:disabled {
+    cursor: not-allowed;
+    filter: grayscale();
+}
