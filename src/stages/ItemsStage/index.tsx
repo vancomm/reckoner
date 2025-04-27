@@ -7,7 +7,7 @@ import Fraction from '../../components/Fraction';
 import StageContainer from '../../components/StageContainer';
 import Toggle from '../../components/Toggle';
 import { InputRecord, useAppState } from '../../contexts/AppStateContext';
-import { UniqueItem } from '../../utils/parseReceiptDocument';
+import { UniqueItem } from '../../lib/parseReceiptDocument';
 import styles from './ItemsStage.module.css';
 
 interface ItemContainerProps {

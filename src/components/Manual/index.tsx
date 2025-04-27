@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { twMerge } from 'tailwind-merge';
 
 import { useAppState } from '../../contexts/AppStateContext';
-import { set } from '../../helpers/cacheHelper';
+import idbCache from '../../lib/idbCache';
 import Button from '../Button';
 import Carousel from '../Carousel';
 import Container from '../Container';
 import CrossIcon from '../CrossIcon';
 import styles from './Manual.module.css';
+
+const pageSources = [
+    './data/manual-page-one.md',
+    './data/manual-page-two.md',
+    './data/manual-page-three.md',
+    './data/manual-page-four.md',
+    './data/manual-page-five.md',
+] as const;
 
 export default function Manual() {
     const {
@@ -17,34 +26,28 @@ export default function Manual() {
     const [ready, setReady] = React.useState(false);
     const [pages, setPages] = React.useState<string[]>([]);
 
-    const pagePromises = [
-        './data/manual-page-one.md',
-        './data/manual-page-two.md',
-        './data/manual-page-three.md',
-        './data/manual-page-four.md',
-        './data/manual-page-five.md',
-    ].map((url) =>
-        fetch(url)
-            .then((r) => r.text())
-            .then((t) => t.trim())
-    );
-
     React.useEffect(() => {
-        Promise.all(pagePromises).then((texts) => {
-            setPages(texts);
+        Promise.all(
+            pageSources.map((url) =>
+                fetch(url)
+                    .then((r) => r.text())
+                    .then((t) => t.trim())
+            )
+        ).then((texts) => {
+            setPages(texts.filter(Boolean));
             setReady(true);
         });
-    });
+    }, []);
 
     return (
-        <Container className={styles.manualContainer} style={ready ? undefined : { display: 'none' }}>
+        <Container className={twMerge(styles.manualContainer, !ready && 'hidden')}>
             <div className={styles.manualControls}>
                 <Button
                     label="don't show again"
                     className={styles.dontShowAgain}
                     onClick={() => {
                         setShowManual(false);
-                        set('showManual', false);
+                        idbCache.set('showManual', false);
                     }}
                 />
                 <Button onClick={() => setShowManual(false)}>

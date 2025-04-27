@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Button from '../../components/Button';
 import StageContainer from '../../components/StageContainer';
 import { useAppState } from '../../contexts/AppStateContext';
+import { isSuccessful } from '../../lib/Optional';
+import parseReceipt, { UniqueItem } from '../../lib/parseReceiptDocument';
 import testfile from '../../test-file.json';
-import { isSuccessful } from '../../utils/Optional';
-import parseReceipt, { UniqueItem } from '../../utils/parseReceiptDocument';
 import styles from './ReceiptStage.module.css';
 
 interface ReceiptStageProps {
@@ -28,9 +28,8 @@ export default function ReceiptStage({ nextFn }: ReceiptStageProps) {
                 nextFn();
             }}
             nextCondition={!!receiptData}
-            customControls={[
+            extraButtons={[
                 {
-                    label: 'Test',
                     onClick: () => {
                         const opt = parseReceipt(JSON.stringify(testfile));
                         if (isSuccessful(opt)) {
@@ -39,6 +38,7 @@ export default function ReceiptStage({ nextFn }: ReceiptStageProps) {
                         }
                     },
                     style: { order: -1 },
+                    children: 'Test',
                 },
             ]}
         >

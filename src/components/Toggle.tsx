@@ -1,9 +1,9 @@
 import cn from 'classnames';
+import React from 'react';
 
-import { Customizable } from '../../types/Customizable';
-import styles from '../Card/Card.module.css';
+import styles from './Card/Card.module.css';
 
-interface ToggleProps extends Customizable {
+interface ToggleProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
     id: string;
     active: boolean;
     label: string;

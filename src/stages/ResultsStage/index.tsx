@@ -5,8 +5,8 @@ import Collapsible from '../../components/Collapsible';
 import Fraction from '../../components/Fraction';
 import StageContainer from '../../components/StageContainer';
 import { InputRecord, useAppState } from '../../contexts/AppStateContext';
-import formatMoney from '../../utils/formatMoney';
-import { UniqueItem } from '../../utils/parseReceiptDocument';
+import formatMoney from '../../lib/formatMoney';
+import { UniqueItem } from '../../lib/parseReceiptDocument';
 import styles from './ResultsStage.module.css';
 
 interface TotalRecord extends InputRecord {
@@ -115,11 +115,11 @@ export default function ResultsStage({ backFn, againFn }: ResultsProps) {
             handleBack={() => {
                 backFn();
             }}
-            customControls={[
+            extraButtons={[
                 {
-                    label: 'Again',
                     onClick: againFn,
                     className: styles.again,
+                    children: 'Again',
                 },
             ]}
         >

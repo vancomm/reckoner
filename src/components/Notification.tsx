@@ -1,4 +1,4 @@
-import CrossIcon from '../../CrossIcon';
+import CrossIcon from './CrossIcon';
 
 interface NotificationProps {
     message: string;

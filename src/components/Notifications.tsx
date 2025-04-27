@@ -1,4 +1,4 @@
-import { useNotifications } from '../../contexts/NotificationContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import Notification from './Notification';
 
 export default function Notifications() {

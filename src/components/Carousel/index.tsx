@@ -1,8 +1,6 @@
 import cn from 'classnames';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { Customizable } from '../../types/Customizable';
-import { Nestable } from '../../types/Nestable';
 import styles from './Carousel.module.css';
 
 interface CarouselContextInterface {
@@ -14,9 +12,7 @@ interface CarouselContextInterface {
 
 const CarouselContext = createContext<CarouselContextInterface>({} as CarouselContextInterface);
 
-interface CarouselContextProviderProps extends Nestable {}
-
-function CarouselContextProvider({ children }: CarouselContextProviderProps) {
+function CarouselContextProvider({ children }: { children: React.ReactNode }) {
     const [activeChild, setActiveChild] = useState<string>();
 
     const [items, setItems] = useState<string[]>([]);
@@ -51,9 +47,7 @@ function CarouselContextProvider({ children }: CarouselContextProviderProps) {
 
 const useCarouselContext = () => useContext(CarouselContext);
 
-interface CarouselProps extends Customizable, Nestable {}
-
-export default function Carousel({ id, className, style, children }: CarouselProps) {
+export default function Carousel({ id, className, style, children }: React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div className={styles.carouselContainer}>
             <CarouselContextProvider>
@@ -65,7 +59,7 @@ export default function Carousel({ id, className, style, children }: CarouselPro
     );
 }
 
-function InnerCarousel({ id, className, style, children }: CarouselProps) {
+function InnerCarousel({ id, className, style, children }: React.HTMLAttributes<HTMLDivElement>) {
     const { items, setActiveChild } = useCarouselContext();
 
     useEffect(() => {
@@ -116,7 +110,7 @@ function CarouselControls() {
     );
 }
 
-interface ItemProps extends Nestable, Customizable {
+interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
 }
 

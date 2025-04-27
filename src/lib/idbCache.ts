@@ -1,12 +1,16 @@
 import * as idb from 'idb-keyval';
 
-import { Optional, makeFailed, makeSuccessful } from '../../utils/Optional';
-import addHours from '../../utils/addHours';
-import IDBCache from './IDBCache';
+import { Optional, makeFailed, makeSuccessful } from './Optional';
+import addHours from './addHours';
 
 const version = 1;
-
 const hoursUntilStale = -1;
+
+export interface IDBCache<T> {
+    version: number;
+    date: Date;
+    data: T;
+}
 
 export interface CacheKeyMap {
     names: string[];
@@ -55,4 +59,6 @@ async function clear() {
     return idb.clear();
 }
 
-export { get, set, del, clear };
+const cache = { get, set, del, clear };
+
+export default cache;

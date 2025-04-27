@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import './App.css';
 import Manual from './components/Manual';
 import { useAppState } from './contexts/AppStateContext';
 import ItemsStage from './stages/ItemsStage';

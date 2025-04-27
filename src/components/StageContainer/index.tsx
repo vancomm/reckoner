@@ -1,21 +1,14 @@
 import cn, { Argument } from 'classnames';
+import React from 'react';
 
-import { Customizable } from '../../types/Customizable';
-import { Nestable } from '../../types/Nestable';
 import Container from '../Container';
 import styles from './StageContainer.module.css';
 
-interface CustomControl extends Customizable {
-    label: string;
-    disabled?: boolean;
-    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
-}
-
 interface StageContainerProps {
-    handleBack?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
-    handleNext?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
+    handleBack?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => unknown;
+    handleNext?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => unknown;
     nextCondition?: boolean;
-    customControls?: CustomControl[];
+    extraButtons?: React.HTMLAttributes<HTMLButtonElement>[];
     className?: Argument;
     children?: React.ReactNode;
 }
@@ -24,7 +17,7 @@ export default function StageContainer({
     handleBack,
     handleNext,
     nextCondition = true,
-    customControls,
+    extraButtons,
     className,
     children,
 }: StageContainerProps) {
@@ -42,24 +35,16 @@ export default function StageContainer({
                         Next
                     </button>
                 )}
-                {customControls?.map(({ label, disabled, onClick, className, style }, index) => (
-                    <button
-                        key={index}
-                        className={cn(styles.button, className)}
-                        onClick={onClick}
-                        disabled={disabled}
-                        style={style}
-                    >
-                        {label}
-                    </button>
+                {extraButtons?.map(({ className, ...props }, index) => (
+                    <button key={index} className={cn(styles.button, className)} {...props} />
                 ))}
             </div>
         </Container>
     );
 }
 
-function Title({ children }: Nestable) {
-    return <span className={styles.title}>{children}</span>;
+function Title({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
+    return <span className={cn(className, styles.title)} {...props} />;
 }
 
 StageContainer.Title = Title;
