@@ -48,7 +48,7 @@ export default function App() {
                         me
                     </a>
                 </span>
-                <span>2022</span>
+                <span>{new Date(__BUILD_DATE__).getFullYear()}</span>
             </footer>
         </div>
     );
