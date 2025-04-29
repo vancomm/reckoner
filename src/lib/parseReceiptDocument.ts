@@ -2,10 +2,10 @@ import Ajv from 'ajv';
 import { Result, err, ok } from 'neverthrow';
 
 import { ReceiptData } from '../contexts/AppStateContext';
-import ReceiptDocument, { Item } from '../types/ReceiptDocument';
+import { ReceiptDocument, ReceiptItem } from '../types/ReceiptDocument';
 import receiptSchema from './ReceiptSchema.json';
 
-export interface UniqueItem extends Item {
+export interface UniqueItem extends ReceiptItem {
     index: number;
 }
 

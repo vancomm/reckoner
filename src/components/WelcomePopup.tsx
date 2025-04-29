@@ -45,8 +45,8 @@ export default function WelcomePopup() {
             <div className="relative sm:w-sm md:w-xl">
                 <div
                     className={twMerge(
-                        folded && 'h-48 cursor-default overflow-clip mask-b-from-50% mask-b-to-80%',
-                        'flex flex-col items-center gap-4 rounded-2xl bg-[rgba(0,_0,_0,_.3)] p-4 text-white'
+                        'flex flex-col items-center gap-4 rounded-2xl bg-black/30 p-4 text-white sm:items-stretch',
+                        folded && 'h-48 cursor-default overflow-clip mask-b-from-50% mask-b-to-80%'
                     )}
                 >
                     <div className="flex w-full justify-between">
@@ -63,26 +63,24 @@ export default function WelcomePopup() {
                             <Close className="h-4 w-4 cursor-pointer fill-white" />
                         </button>
                     </div>
-                    <div
-                        className={twMerge('flex w-full gap-2', folded && 'cursor-pointer')}
+                    <Carousel
+                        className={twMerge(folded && 'cursor-pointer')}
                         onClick={() => {
                             if (folded) {
                                 setFolded(false);
                             }
                         }}
                     >
-                        <Carousel>
-                            {pages.map((page, i) => (
-                                <Carousel.Item
-                                    key={`carousel-item-${i}`}
-                                    id={`carousel-item-${i}`}
-                                    className="prose prose-sm dark:prose-invert leading-5"
-                                >
-                                    <Markdown>{page}</Markdown>
-                                </Carousel.Item>
-                            ))}
-                        </Carousel>
-                    </div>
+                        {pages.map((page, i) => (
+                            <Carousel.Item
+                                key={`carousel-item-${i}`}
+                                id={`carousel-item-${i}`}
+                                className="prose prose-sm dark:prose-invert leading-5"
+                            >
+                                <Markdown>{page}</Markdown>
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
                 </div>
                 {folded && (
                     <button

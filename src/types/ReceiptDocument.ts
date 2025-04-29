@@ -1,24 +1,4 @@
-type ReceiptDocument = ReceiptDocumentItem[];
-
-export default ReceiptDocument;
-
-export interface ReceiptDocumentItem {
-    ticket: Ticket;
-}
-
-export interface Ticket {
-    document: Document;
-}
-
-export interface Document {
-    receipt: Receipt;
-}
-
-export interface Receipt {
-    items: Item[];
-}
-
-export interface Item {
+export interface ReceiptItem {
     quantity: number;
     productType: number;
     nds: number;
@@ -27,3 +7,21 @@ export interface Item {
     name: string;
     sum: number;
 }
+
+export interface Receipt {
+    items: ReceiptItem[];
+}
+
+export interface Document {
+    receipt: Receipt;
+}
+
+export interface Ticket {
+    document: Document;
+}
+
+export interface ReceiptDocumentItem {
+    ticket: Ticket;
+}
+
+export type ReceiptDocument = ReceiptDocumentItem[];

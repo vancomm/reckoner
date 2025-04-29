@@ -1,8 +1,5 @@
-import cn from 'classnames';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
-
-import styles from './Carousel.module.css';
 
 interface CarouselContextInterface {
     activeChild?: string;
@@ -11,64 +8,62 @@ interface CarouselContextInterface {
     register: (id: string) => void;
 }
 
-const CarouselContext = createContext<CarouselContextInterface>({} as CarouselContextInterface);
+const CarouselContext = React.createContext<CarouselContextInterface>(null!);
 
 function CarouselContextProvider({ children }: { children: React.ReactNode }) {
-    const [activeChild, setActiveChild] = useState<string>();
+    const [activeChild, setActiveChild] = React.useState<string>();
+    const [items, setItems] = React.useState<string[]>([]);
 
-    const [items, setItems] = useState<string[]>([]);
+    const register = React.useMemo(
+        () => (id: string) =>
+            setItems((state) =>
+                state.includes(id)
+                    ? state
+                    : [...state, id].sort((a, b) => {
+                          const tailNumberRegex = /\d+$/;
+                          const endsInANumber = (str: string) => /\d+$/.test(str);
+                          if (!endsInANumber(a)) return endsInANumber(b) ? -1 : 1;
+                          if (!endsInANumber(b)) return 1;
+                          const numA = a.match(tailNumberRegex)![0];
+                          const numB = b.match(tailNumberRegex)![0];
+                          return parseInt(numA) - parseInt(numB);
+                      })
+            ),
+        []
+    );
 
-    const register = (id: string) =>
-        setItems((state) =>
-            state.includes(id)
-                ? state
-                : [...state, id].sort((a, b) => {
-                      const tailNumberRegex = /\d+$/;
-                      const endsInANumber = (str: string) => /\d+$/.test(str);
-                      if (!endsInANumber(a)) return endsInANumber(b) ? -1 : 1;
-                      if (!endsInANumber(b)) return 1;
-                      const numA = a.match(tailNumberRegex)![0];
-                      const numB = b.match(tailNumberRegex)![0];
-                      return parseInt(numA) - parseInt(numB);
-                  })
-        );
-
-    const value: CarouselContextInterface = useMemo(
+    const value: CarouselContextInterface = React.useMemo(
         () => ({
             items,
             register,
             activeChild,
             setActiveChild,
         }),
-        [items, activeChild]
+        [items, register, activeChild]
     );
 
     return <CarouselContext.Provider value={value}>{children}</CarouselContext.Provider>;
 }
 
-const useCarouselContext = () => useContext(CarouselContext);
+const useCarouselContext = () => React.useContext(CarouselContext);
 
-export default function Carousel({ id, className, style, children }: React.HTMLAttributes<HTMLDivElement>) {
+export default function Carousel(props: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className={styles.carouselContainer}>
-            <CarouselContextProvider>
-                <InnerCarousel id={id} className={className} style={style}>
-                    {children}
-                </InnerCarousel>
-            </CarouselContextProvider>
-        </div>
+        <CarouselContextProvider>
+            <InnerCarousel {...props} />
+        </CarouselContextProvider>
     );
 }
 
-function InnerCarousel({ id, className, style, children }: React.HTMLAttributes<HTMLDivElement>) {
+function InnerCarousel({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     const { items, setActiveChild } = useCarouselContext();
 
-    useEffect(() => {
+    React.useEffect(() => {
         setActiveChild(items[0]);
     }, [items, setActiveChild]);
 
     return (
-        <div id={id} className={cn(styles.carousel, className)} style={style}>
+        <div className={twMerge('relative flex flex-col items-center gap-2', className)} {...props}>
             {children}
             {items.length > 1 && <CarouselControls />}
         </div>
@@ -95,19 +90,23 @@ function CarouselControls() {
     };
 
     return (
-        <div className={styles.carouselControls}>
-            <button className={styles.carouselControl} onClick={handlePrev}>
-                {'<'}
-            </button>
-            <span>
-                {activeChild ? items.indexOf(activeChild) + 1 : '-'}
-                {' / '}
-                {items.length || '-'}
-            </span>
-            <button className={styles.carouselControl} onClick={handleNext}>
-                {'>'}
-            </button>
-        </div>
+        <>
+            <div className="flex items-center justify-center gap-2">
+                <button className="cursor-pointer text-white/70" onClick={handlePrev}>
+                    {'<'}
+                </button>
+                <span>
+                    {activeChild ? items.indexOf(activeChild) + 1 : '-'}
+                    {' / '}
+                    {items.length || '-'}
+                </span>
+                <button className="cursor-pointer text-white/70" onClick={handleNext}>
+                    {'>'}
+                </button>
+            </div>
+            <div className="absolute top-0 left-0 grid h-full w-[20%] cursor-pointer" onClick={handlePrev} />
+            <div className="absolute top-0 right-0 grid h-full w-[20%] cursor-pointer" onClick={handleNext} />
+        </>
     );
 }
 
@@ -118,7 +117,7 @@ interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
 function CarouselItem({ id, className, ...props }: ItemProps) {
     const { register, activeChild } = useCarouselContext();
 
-    useEffect(() => {
+    React.useEffect(() => {
         register(id);
     }, [register, id]);
 

@@ -4,14 +4,14 @@ import { twMerge } from 'tailwind-merge';
 
 import Collapsible from '../components/Collapsible';
 import ExpandMore from '../components/ExpandMore';
-import FocusableOnMountInput from '../components/FocusableOnMountInput';
 import Fraction from '../components/Fraction';
-import PillInput from '../components/PillInput';
+import ReceiptForm from '../components/ReceiptForm';
+import ShareholderForm, { Shareholder } from '../components/ShareholderForm';
+import SplitForm from '../components/SharesForm';
 import WelcomePopup from '../components/WelcomePopup';
 import { InputRecord, useAppState } from '../contexts/AppStateContext';
 import formatMoney from '../lib/formatMoney';
-import parseReceipt, { UniqueItem } from '../lib/parseReceiptDocument';
-import testfile from '../test-file.json';
+import { UniqueItem } from '../lib/parseReceiptDocument';
 
 export const Route = createFileRoute('/')({
     component: Index,
@@ -20,11 +20,16 @@ export const Route = createFileRoute('/')({
 function Index() {
     const { receiptData } = useAppState();
 
+    const [shareholders, setShareholders] = React.useState<Shareholder[]>([
+        { id: 'van', name: 'van' },
+        { id: 'kol', name: 'kol' },
+    ]);
+
     return (
         <>
             <WelcomePopup />
             <Container>
-                <NamesForm />
+                <ShareholderForm shareholders={shareholders} setShareholders={setShareholders} />
             </Container>
             <Container>
                 <ReceiptForm />
@@ -49,303 +54,6 @@ function Container({ className, ...props }: React.HTMLAttributes<HTMLDivElement>
             className={twMerge('flex flex-col gap-2 rounded-2xl bg-black/20 p-3 sm:w-sm md:w-xl', className)}
             {...props}
         />
-    );
-}
-
-function ReceiptForm() {
-    const [errorMessage, setErrorMessage] = React.useState('');
-    const { receiptData, setReceiptData } = useAppState();
-
-    return (
-        <>
-            <h3 className="ml-1">Загрузите JSON с данными о вашем чеке:</h3>
-            <fieldset className="flex flex-col overflow-clip rounded-lg border-2 border-transparent bg-[rgba(0,0,0,0.3)]">
-                <input
-                    id="receipt-file"
-                    className="cursor-pointer px-2 py-3 text-sm"
-                    type="file"
-                    accept="application/json"
-                    onChange={async (e) => {
-                        const inputFile = e.target.files?.[0];
-                        if (!inputFile) return;
-                        if (inputFile.type !== 'application/json') {
-                            setReceiptData(undefined);
-                            setErrorMessage('Uploaded file must be of JSON format');
-                            return;
-                        }
-                        const content = await inputFile.text();
-                        const receiptDataOption = parseReceipt(content);
-                        if (receiptDataOption.isErr()) {
-                            setReceiptData(undefined);
-                            setErrorMessage(receiptDataOption.error);
-                            return;
-                        }
-
-                        const { items } = receiptDataOption.value;
-                        const uniqueItems: UniqueItem[] = items.map((item, index) => ({
-                            ...item,
-                            index,
-                        }));
-                        setReceiptData({ items: uniqueItems });
-                        setErrorMessage('');
-                    }}
-                />
-                <hr />
-                <button
-                    className="cursor-pointer px-2 pt-1 pb-2 text-start text-sm font-bold"
-                    onClick={() => {
-                        const opt = parseReceipt(JSON.stringify(testfile));
-                        if (opt.isOk()) {
-                            setReceiptData(opt.value);
-                            setErrorMessage('');
-                        }
-                    }}
-                >
-                    Загрузить демо
-                </button>
-            </fieldset>
-
-            {(errorMessage || receiptData) && (
-                <div className={twMerge('px-2 text-sm', receiptData ? '' : '')}>
-                    {errorMessage
-                        ? `✘ ${errorMessage}`
-                        : receiptData && `✔ найдено позиций: ${receiptData.items.length}`}
-                </div>
-            )}
-        </>
-    );
-}
-
-function NamesForm() {
-    const { names, setNames } = useAppState();
-    const [editableNameIndex, setEditableNameIndex] = React.useState<number>();
-
-    return (
-        <>
-            <h3 className="ml-1">Между кем делим чек?</h3>
-
-            <div className="flex flex-wrap items-center gap-1">
-                {names.map((name, index) => {
-                    const updateName = (name: string) =>
-                        setNames((names) => names.map((n, i) => (i === index ? name.trim() : n)));
-                    return (
-                        <PillInput
-                            key={`name-form-${index}`}
-                            editable={index === editableNameIndex}
-                            onClickOutside={() => {
-                                console.log('onclickoutside', index, name);
-                                if (editableNameIndex === index) setEditableNameIndex(undefined);
-                            }}
-                            onClose={() => {
-                                setNames((state) => state.filter((_, i) => i !== index));
-                            }}
-                            pillProps={{
-                                children: name,
-                                onClick: () => {
-                                    console.log('onclick', index, name);
-                                    if (editableNameIndex !== index) setEditableNameIndex(index);
-                                },
-                            }}
-                            inputProps={{
-                                value: name,
-                                onChange: (e) => {
-                                    const { value } = e.target;
-                                    updateName(value);
-                                },
-                                onBlur: (e) => {
-                                    const { value } = e.target;
-                                    if (!value) {
-                                        setNames((state) => state.filter((_, i) => i !== index));
-                                    }
-                                },
-                                onKeyDown: (e) => {
-                                    const target = e.target as EventTarget & HTMLInputElement;
-                                    const { value } = target;
-                                    console.log(e.key, value);
-                                    if (e.key === 'Enter' || e.key === 'Escape') {
-                                        if (value) {
-                                            updateName(value);
-                                            setEditableNameIndex(undefined);
-                                        }
-                                    }
-                                },
-                            }}
-                        />
-                    );
-                })}
-                <FocusableOnMountInput
-                    name={''}
-                    focusOnMount={false}
-                    placeholder="Добавить..."
-                    style={{ width: `20ch` }}
-                    className="h-9"
-                    onKeyDown={(e) => {
-                        const target = e.target as EventTarget & HTMLInputElement;
-                        const { value } = target;
-                        if (e.key === 'Enter') {
-                            if (value) {
-                                setNames((ns) => [...ns, value]);
-                                target.value = '';
-                            }
-                        }
-                    }}
-                />
-            </div>
-        </>
-    );
-}
-
-function SplitForm() {
-    const { receiptData } = useAppState();
-
-    if (!receiptData) return null;
-    const items = receiptData.items;
-
-    return (
-        <>
-            <h3 className="ml-1">Разделите свои покупки:</h3>
-            <div className="flex flex-col gap-2">
-                {items.map((item) => (
-                    <SplitControl key={item.index} item={item} />
-                ))}
-            </div>
-        </>
-    );
-}
-
-interface SplitControlProps {
-    item: UniqueItem;
-}
-
-function SplitControl({ item }: SplitControlProps) {
-    const {
-        names,
-        setInputRecords,
-        inputRecordsInterface: { getRecord, getRecords, getShares },
-    } = useAppState();
-
-    const [equalShares, setEqualShares] = React.useState(true);
-
-    const records = getRecords({ item });
-    const isFilled = records.some((r) => r.share > 0);
-    const shares = getShares(item);
-    const buyers = records.filter((r) => r.share);
-    const soloBuyer = buyers.length === 1;
-
-    return (
-        <div className="relative flex flex-col gap-y-2 rounded-md bg-black/20 px-4 pt-3 pb-2 sm:p-5">
-            <div>
-                <h3 className="font-mono text-xl" id={encodeURIComponent(`${item.index}-${item.name}`)}>
-                    {item.name}
-                </h3>
-                <h3 className="flex gap-1 text-sm">
-                    <span className="font-mono">{formatMoney(item.sum)}</span>
-                    {item.quantity > 1 && (
-                        <>
-                            <span className="font-mono opacity-50">=</span>
-                            <span className="font-mono opacity-50">{formatMoney(item.price)}</span>
-                            <span className="font-mono opacity-50">×</span>
-                            <span className="font-mono opacity-50">{item.quantity}</span>
-                        </>
-                    )}
-                </h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-                {names.map((name, i) => {
-                    const id = `${item.name}-${item.index}-${name}-${i}`;
-                    const checked = (getRecord({ item, name })?.share ?? 0) > 0;
-                    return (
-                        <label
-                            key={id}
-                            htmlFor={id}
-                            className="cursor-pointer rounded-sm bg-[rgba(0,0,0,.2)] px-2 py-1 transition-colors select-none hover:bg-[rgba(0,0,0,.3)] has-[:checked]:bg-amber-50 has-[:checked]:text-black"
-                        >
-                            <input
-                                id={id}
-                                className="hidden"
-                                type="checkbox"
-                                checked={checked}
-                                onChange={(e) => {
-                                    if (buyers.length === 2 && !e.target.checked) {
-                                        setEqualShares(true);
-                                    }
-
-                                    const updated = { item, name, share: e.target.checked ? 1 : 0 };
-                                    setInputRecords((records) => {
-                                        const stale = records.find((r) => r.item === item && r.name === name);
-                                        return stale
-                                            ? records.map((r) => (r === stale ? updated : r))
-                                            : [...records, updated];
-                                    });
-                                }}
-                            />
-                            <div className="flex items-center gap-1">
-                                <div className="font-mono">{checked ? '-' : '+'}</div>
-                                <div>{name}</div>
-                            </div>
-                        </label>
-                    );
-                })}
-            </div>
-            {!!buyers.length && (
-                <div>
-                    <div className={twMerge('grid w-fit grid-cols-[repeat(6,min-content)] gap-x-2 gap-y-2')}>
-                        {buyers.map((buyer) => (
-                            <React.Fragment key={buyer.name}>
-                                <div>{`${buyer.name}:`}</div>
-                                <div className="font-mono">{formatMoney(item.sum * (buyer.share / shares))}</div>
-
-                                <div
-                                    className={twMerge(
-                                        'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
-                                    )}
-                                >{`=`}</div>
-                                <div
-                                    className={twMerge(
-                                        'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
-                                    )}
-                                >
-                                    {formatMoney(item.price)}
-                                </div>
-                                <div
-                                    className={twMerge(
-                                        'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
-                                    )}
-                                >{`×`}</div>
-                                <Fraction
-                                    className={twMerge(
-                                        'text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white'
-                                    )}
-                                    numerator={buyer.share}
-                                    denominator={shares}
-                                />
-                            </React.Fragment>
-                        ))}
-                    </div>
-                    {buyers.length > 1 && (
-                        <label htmlFor="equal-shares" className="mt-2 block cursor-pointer text-sm select-none">
-                            <input
-                                type="checkbox"
-                                id="equal-shares"
-                                checked={equalShares}
-                                onChange={(e) => setEqualShares(e.target.checked)}
-                            />
-                            {' делить поровну'}
-                        </label>
-                    )}
-                </div>
-            )}
-            <div
-                className={twMerge(
-                    'absolute top-0 right-0 h-5/6 w-1 -translate-x-1.5 translate-y-1/12 rounded-full bg-pink-300 transition-colors',
-                    isFilled && 'bg-green-300'
-                )}
-            />
-        </div>
     );
 }
 
