@@ -1,24 +1,25 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
 import { useOnClickOutside } from 'usehooks-ts';
 
-import Clear from '../components/Clear';
 import Edit from '../components/Edit';
+import FocusableOnMountInput, { FocusableOnMountInputProps } from './FocusableOnMountInput';
+import Pill, { PillProps } from './Pill';
 
-interface PillInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PillInputProps extends React.InputHTMLAttributes<HTMLDivElement> {
     editable?: boolean;
     onClose?: () => unknown;
     onClickOutside?: () => unknown;
-    onPillClick?: React.MouseEventHandler<HTMLDivElement>;
+    pillProps?: PillProps;
+    inputProps?: FocusableOnMountInputProps;
 }
 
 export default function PillInput({
-    value,
     editable,
     onClose,
     onClickOutside,
-    onPillClick,
     onClick,
+    inputProps,
+    pillProps,
     ...props
 }: PillInputProps) {
     const ref = React.useRef<HTMLDivElement>(null!);
@@ -26,46 +27,21 @@ export default function PillInput({
     useOnClickOutside(ref, () => onClickOutside?.());
 
     return (
-        <div ref={ref} onClick={onClick}>
+        <div ref={ref} onClick={onClick} {...props}>
             {editable ? (
-                <FocusedOnMountInput
-                    value={value}
+                <FocusableOnMountInput
+                    value={inputProps?.value}
                     placeholder="Введите текст..."
-                    style={{ width: `${String(value).length + 5}ch` }}
-                    {...props}
+                    style={{ width: `${String(inputProps?.value).length + 5}ch` }}
+                    className="h-9"
+                    {...inputProps}
                 />
             ) : (
-                <div className="flex items-center gap-1 rounded-sm bg-black/30 p-1 font-semibold">
-                    <div className="group cursor-pointer p-0.5" onClick={onPillClick}>
-                        <Edit className="fill-white opacity-50 group-hover:opacity-100" />
-                    </div>
-                    <p>{value}</p>
-                    <button className="cursor-pointer" onMouseDown={() => onClose?.()} tabIndex={-1}>
-                        <Clear width="1em" height="1em" className="fill-white opacity-50 hover:opacity-100" />
-                    </button>
-                </div>
+                <Pill className="group h-9" onClose={onClose} {...pillProps}>
+                    <Edit className="fill-white opacity-50 group-hover:opacity-100" />
+                    {pillProps?.children}
+                </Pill>
             )}
         </div>
-    );
-}
-
-function FocusedOnMountInput({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
-    const ref = React.useRef<HTMLInputElement>(null!);
-
-    React.useEffect(() => {
-        ref.current.focus();
-    }, []);
-
-    return (
-        <input
-            ref={ref}
-            type="text"
-            className={twMerge(
-                'w-full rounded-sm border-none bg-[rgba(0,0,0,0.3)] p-1 pr-6 focus:outline-0',
-                className
-            )}
-            placeholder="Enter name..."
-            {...props}
-        />
     );
 }
