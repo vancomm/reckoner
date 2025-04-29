@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import React from 'react';
 
-import Button from '../Button';
-import Toggle from '../Toggle';
+import Button from './Button';
 import styles from './Card.module.css';
+import Toggle from './Toggle';
 
 export default function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return <div className={cn(styles.card, className)} {...props} />;

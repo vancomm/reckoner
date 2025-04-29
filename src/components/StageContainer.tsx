@@ -1,7 +1,7 @@
 import cn, { Argument } from 'classnames';
 import React from 'react';
 
-import Container from '../Container';
+import Container from './Container';
 import styles from './StageContainer.module.css';
 
 interface StageContainerProps {

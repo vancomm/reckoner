@@ -116,19 +116,7 @@ export function AppStateProvider({ children }: StateProviderProps) {
         [names, receiptData, inputRecords, getRecords, getRecord, getShares, uiState]
     );
 
-    const init = async () =>
-        Promise.all([
-            idbCache.get('names').then((r) => r.map(setNames)),
-            idbCache.get('showManual').then((r) =>
-                r.match(
-                    (v) => setShowManual(v),
-                    () => {
-                        setShowManual(true);
-                        idbCache.set('showManual', true);
-                    }
-                )
-            ),
-        ]);
+    const init = async () => Promise.all([idbCache.get('names').then((r) => r.map(setNames))]);
 
     useEffect(() => {
         init().then(() => setInitialized(true));

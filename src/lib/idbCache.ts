@@ -20,7 +20,7 @@ export interface IDBCache<T> {
 
 export interface CacheKeyMap {
     names: string[];
-    showManual: boolean;
+    hideWelcomeMessage: boolean;
 }
 
 export type CacheKey = keyof CacheKeyMap;

@@ -1,0 +1,100 @@
+/* .nameForm {
+    width: 100%;
+    position: relative;
+}
+
+.nameInput {
+    width: 100%;
+    padding: 0.2em;
+    padding-right: 24px;
+    background-color: var(--bg-overlay);
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    transition: background 50ms ease-in;
+} */
+
+.nameInput:hover {
+    background-color: var(--bg-overlay-hover);
+}
+
+.nameInput:focus {
+    background-color: var(--bg-overlay-active);
+    outline: none;
+}
+
+.invalid:focus {
+    outline: 2px solid rgba(255, 0, 0, 0.9);
+}
+
+.invalid {
+    outline: 2px solid rgba(255, 0, 0, 0.5);
+}
+
+.deleteBtn {
+    position: absolute;
+    top: 0.1em;
+    right: 0;
+    transform: translate(-0.3em, 50%);
+    background: none;
+    border: none;
+    display: none;
+    place-items: center;
+    fill: var(--color-primary);
+}
+
+:hover > .deleteBtn {
+    display: grid;
+}
+
+.nameInput:focus > .deleteBtn {
+    display: none !important;
+}
+
+/* .crossInCircleBtn {
+    height: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    margin-left: -24px;
+    display: none;
+    place-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 200;
+    fill: var(--bg-input-btn);
+    background: none;
+    border: none;
+}
+
+:focus ~ .crossInCircleBtn {
+    display: grid;
+}
+
+.crossInCircleBtn:hover {
+    filter: brightness(150%);
+}
+
+.crossInCircleBtn.active {
+    filter: brightness(200%);
+} */
+
+.crossBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    aspect-ratio: 1;
+    background: none;
+    fill: white;
+    opacity: 0.5;
+    display: grid;
+    place-items: center;
+}
+
+:focus ~ .crossBtn {
+    display: none;
+}

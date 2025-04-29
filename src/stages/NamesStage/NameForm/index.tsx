@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { useState } from 'react';
 
-import CrossInCircleIcon from '../../../components/CrossInCircleIcon';
+import CrossInCircleIcon from '../../../components/Clear';
 import styles from './NameForm.module.css';
 
 interface NameFormProps {

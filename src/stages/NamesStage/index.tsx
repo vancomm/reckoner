@@ -1,7 +1,7 @@
 // import cn from "classnames";
 import StageContainer from '../../components/StageContainer';
 import { useAppState } from '../../contexts/AppStateContext';
-import NameForm from './NameForm';
+import NameInput from './NameForm';
 import styles from './NamesStage.module.css';
 
 interface NamesStageProps {
@@ -35,7 +35,7 @@ export default function NamesStage({ backFn, nextFn }: NamesStageProps) {
 
             <div className={styles.namesForm}>
                 {names.concat('').map((name, index) => (
-                    <NameForm
+                    <NameInput
                         key={`name-form-${index}`}
                         name={name}
                         index={index}

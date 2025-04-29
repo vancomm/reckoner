@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React from 'react';
 
-export default function CrossIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+export default function Close({ className, ...props }: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             version="1.1"

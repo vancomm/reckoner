@@ -33,9 +33,9 @@
     /* opacity: 0.6; */
 }
 
-.dismissIcon:hover {
-    /* opacity: 1; */
-}
+/* .dismissIcon:hover {
+    opacity: 1;
+} */
 
 .dontShowAgain {
     display: inline;

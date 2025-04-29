@@ -1,19 +1,6 @@
-interface CrossInCircleIconProps {
-    width: string;
-    height: string;
-}
-
-export default function CrossInCircleIcon({ width, height }: CrossInCircleIconProps) {
+export default function Clear(props: React.SVGProps<SVGSVGElement>) {
     return (
-        <svg
-            version="1.1"
-            x="0px"
-            y="0px"
-            className="cross-in-circle"
-            viewBox="0 0 587.91 587.91"
-            width={width}
-            height={height}
-        >
+        <svg version="1.1" x="0px" y="0px" className="cross-in-circle" viewBox="0 0 587.91 587.91" {...props}>
             <g>
                 <g>
                     <g>

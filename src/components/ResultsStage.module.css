@@ -1,0 +1,113 @@
+.hr {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    background-color: var(--divider);
+    border: none;
+}
+
+.totals {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.totalCard {
+    /* padding-bottom: 0; */
+}
+
+.title {
+    margin-bottom: 0;
+}
+
+.value {
+    font-family: monospace;
+}
+
+.gridDetails {
+    width: 100%;
+    padding-bottom: 0.4em;
+    display: grid;
+    grid-template-columns: min-content 1fr repeat(5, min-content);
+    row-gap: 0.3em;
+    column-gap: 0.5em;
+    transition: height ease 200ms;
+    position: relative;
+    counter-reset: item;
+}
+
+.gridDetails * {
+    font: 0.6rem monospace;
+    min-width: 0;
+}
+
+.gridDetails > * {
+    display: flex;
+    justify-content: flex-start;
+    overflow-wrap: break-word;
+}
+
+.gridDetails > .number {
+    justify-content: flex-end;
+}
+
+.gridDetails > .share {
+    justify-content: center;
+}
+
+.gridDetails > :nth-child(7n) {
+    font-weight: bold;
+}
+
+.gridDetails > :last-child {
+    grid-column: 1/-1;
+    border-top: 2px dotted white;
+}
+
+/* .gridDetails>:first-child::before {
+  content: "#";
+  font-family: monospace;
+}
+
+.gridDetails>:not(:last-child, :first-child):where(:nth-child(6n+1))::before {
+  content: counter(item);
+  counter-increment: item;
+  font-family: monospace;
+  position: absolute;
+  left: -.4em;
+} */
+
+.gridTitle {
+    font-weight: bold;
+}
+
+.fraction * {
+    font-size: 0.5rem;
+    font-weight: bold;
+}
+
+.itemQuantity {
+    color: var(--color-faded);
+}
+
+.totalLine {
+    display: flex;
+    justify-content: space-between;
+}
+
+.totalLine * {
+    font-family: monospace;
+}
+
+.again {
+    background-color: var(--green) !important;
+}
+
+.again:hover {
+    background-color: var(--green);
+}
+
+.again:active {
+    background-color: var(--green);
+}

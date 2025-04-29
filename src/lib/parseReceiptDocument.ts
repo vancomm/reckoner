@@ -14,11 +14,15 @@ const ajv = new Ajv();
 const validate = ajv.compile<ReceiptDocument>(receiptSchema);
 
 export default function parseReceipt(json: string): Result<ReceiptData, string> {
-    const data = JSON.parse(json);
+    const data = Result.fromThrowable(JSON.parse)(json);
+    if (data.isErr()) {
+        console.error(data.error);
+        return err('Некорректный формат файла');
+    }
 
-    if (!validate(data)) return err('Bad JSON shape');
+    if (!validate(data.value)) return err('Bad JSON shape');
 
-    const items = data[0].ticket.document.receipt.items;
+    const items = data.value[0].ticket.document.receipt.items;
 
     const uniqueItems: UniqueItem[] = items.map((item, index) => ({
         ...item,

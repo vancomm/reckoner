@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import styles from './Carousel.module.css';
 
@@ -114,7 +115,7 @@ interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
 }
 
-function Item({ id, className, style, children }: ItemProps) {
+function CarouselItem({ id, className, ...props }: ItemProps) {
     const { register, activeChild } = useCarouselContext();
 
     useEffect(() => {
@@ -122,16 +123,8 @@ function Item({ id, className, style, children }: ItemProps) {
     }, [register, id]);
 
     return (
-        <div
-            id={id}
-            className={cn(className, styles.carouselItem, {
-                [styles.active]: id === activeChild,
-            })}
-            style={style}
-        >
-            {children}
-        </div>
+        <div className={twMerge('carousel-item hidden w-full', id === activeChild && 'block', className)} {...props} />
     );
 }
 
-Carousel.Item = Item;
+Carousel.Item = CarouselItem;
