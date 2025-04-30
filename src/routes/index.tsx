@@ -2,22 +2,25 @@ import { createFileRoute } from '@tanstack/react-router';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import ReceiptForm from '../components/ReceiptForm';
-import Results from '../components/Results';
-import ShareholderForm from '../components/ShareholderForm';
-import SplitForm from '../components/SharesForm';
-import WelcomePopup from '../components/WelcomePopup';
-import idbCache from '../lib/idbCache';
-import { UniqueItem } from '../lib/receiptDocument';
-import { ItemShare, Shareholder } from '../lib/shareholder';
+import ReceiptForm from '@/components/ReceiptForm';
+import Results from '@/components/Results';
+import ShareholderForm from '@/components/ShareholderForm';
+import SplitForm from '@/components/SharesForm';
+import WelcomePopup from '@/components/WelcomePopup';
+import idbCache from '@/lib/idbCache';
+import { UniqueItem } from '@/lib/receiptDocument';
+import { ItemShare, Shareholder } from '@/lib/shareholder';
 
 export const Route = createFileRoute('/')({
     component: App,
-    loader: () => idbCache.get('names').then((res) => res.unwrapOr<string[]>([])),
+    loader: async () => {
+        const res = await idbCache.get('names');
+        return { names: res.unwrapOr<string[]>([]) };
+    },
 });
 
 function App() {
-    const cachedShareholderNames = Route.useLoaderData();
+    const { names: cachedShareholderNames } = Route.useLoaderData();
 
     const [shareholders, setShareholders] = React.useState<Shareholder[]>(
         cachedShareholderNames.map((name) => ({ name, id: name }))

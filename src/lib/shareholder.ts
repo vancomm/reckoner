@@ -1,4 +1,4 @@
-import { UniqueItem } from './receiptDocument';
+import { UniqueItem } from '@/lib/receiptDocument';
 
 export interface Shareholder {
     id: string;

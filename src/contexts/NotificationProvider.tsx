@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NotificationsContext } from './NotificationContext';
+import { NotificationsContext } from '@/contexts/NotificationContext';
 
 interface Notifications {
     notifications: string[];

@@ -2,7 +2,8 @@ import { Result } from 'neverthrow';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { UniqueItem, receiptDocumentSchema } from '../lib/receiptDocument';
+import { UniqueItem, receiptDocumentSchema } from '@/lib/receiptDocument';
+
 import testfile from '../test-file.json';
 
 interface ReceiptFormProps {

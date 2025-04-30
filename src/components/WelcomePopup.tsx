@@ -2,9 +2,9 @@ import React from 'react';
 import Markdown from 'react-markdown';
 import { twMerge } from 'tailwind-merge';
 
-import Carousel from '../components/Carousel';
-import Close from '../components/Close';
-import idbCache from '../lib/idbCache';
+import Carousel from '@/components/Carousel';
+import Close from '@/components/Close';
+import idbCache from '@/lib/idbCache';
 
 const manualSources = ['./md/1.md', './md/2.md', './md/3.md', './md/4.md'] as const;
 

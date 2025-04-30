@@ -2,12 +2,12 @@ import { Link } from '@tanstack/react-router';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import formatMoney from '../lib/formatMoney';
-import { UniqueItem } from '../lib/receiptDocument';
-import { ItemShare } from '../lib/shareholder';
-import Collapsible from './Collapsible';
-import ExpandMore from './ExpandMore';
-import Fraction from './Fraction';
+import Collapsible from '@/components/Collapsible';
+import ExpandMore from '@/components/ExpandMore';
+import Fraction from '@/components/Fraction';
+import formatMoney from '@/lib/formatMoney';
+import { UniqueItem } from '@/lib/receiptDocument';
+import { ItemShare } from '@/lib/shareholder';
 
 interface ResultsProps {
     receiptItems: UniqueItem[];

@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 
-import Clear from './Clear';
+import Clear from '@/components/Clear';
 
 export interface PillProps extends React.HTMLAttributes<HTMLDivElement> {
     onClose?: React.MouseEventHandler<HTMLButtonElement>;

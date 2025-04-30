@@ -1,9 +1,9 @@
 import React from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
 
-import Edit from '../components/Edit';
-import FocusableOnMountInput, { FocusableOnMountInputProps } from './FocusableOnMountInput';
-import Pill, { PillProps } from './Pill';
+import Edit from '@/components/Edit';
+import FocusableOnMountInput, { FocusableOnMountInputProps } from '@/components/FocusableOnMountInput';
+import Pill, { PillProps } from '@/components/Pill';
 
 interface PillInputProps extends React.InputHTMLAttributes<HTMLDivElement> {
     editable?: boolean;

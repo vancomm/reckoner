@@ -1,10 +1,10 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import formatMoney from '../lib/formatMoney';
-import { UniqueItem } from '../lib/receiptDocument';
-import { ItemShare } from '../lib/shareholder';
-import Fraction from './Fraction';
+import Fraction from '@/components/Fraction';
+import formatMoney from '@/lib/formatMoney';
+import { UniqueItem } from '@/lib/receiptDocument';
+import { ItemShare } from '@/lib/shareholder';
 
 interface SplitFormProps {
     receiptItems: UniqueItem[];

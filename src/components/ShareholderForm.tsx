@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Shareholder } from '../lib/shareholder';
-import FocusableOnMountInput from './FocusableOnMountInput';
-import PillInput from './PillInput';
+import FocusableOnMountInput from '@/components/FocusableOnMountInput';
+import PillInput from '@/components/PillInput';
+import { Shareholder } from '@/lib/shareholder';
 
 interface ShareholderFormProps {
     shareholders: Shareholder[];
