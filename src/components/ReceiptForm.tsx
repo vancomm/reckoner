@@ -1,13 +1,17 @@
+import { Result } from 'neverthrow';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAppState } from '../contexts/AppStateContext';
-import parseReceipt, { UniqueItem } from '../lib/parseReceiptDocument';
+import { UniqueItem, receiptDocumentSchema } from '../lib/receiptDocument';
 import testfile from '../test-file.json';
 
-export default function ReceiptForm() {
+interface ReceiptFormProps {
+    receiptItems: UniqueItem[];
+    setReceiptItems: React.Dispatch<React.SetStateAction<UniqueItem[]>>;
+}
+
+export default function ReceiptForm({ receiptItems, setReceiptItems }: ReceiptFormProps) {
     const [errorMessage, setErrorMessage] = React.useState('');
-    const { receiptData, setReceiptData } = useAppState();
 
     return (
         <>
@@ -21,25 +25,36 @@ export default function ReceiptForm() {
                     onChange={async (e) => {
                         const inputFile = e.target.files?.[0];
                         if (!inputFile) return;
+
                         if (inputFile.type !== 'application/json') {
-                            setReceiptData(undefined);
+                            setReceiptItems([]);
                             setErrorMessage('Uploaded file must be of JSON format');
                             return;
                         }
-                        const content = await inputFile.text();
-                        const receiptDataOption = parseReceipt(content);
-                        if (receiptDataOption.isErr()) {
-                            setReceiptData(undefined);
-                            setErrorMessage(receiptDataOption.error);
+
+                        const text = await inputFile.text();
+                        const jsonParseResult = Result.fromThrowable(JSON.parse)(text);
+                        if (jsonParseResult.isErr()) {
+                            console.error(jsonParseResult.error);
+                            setReceiptItems([]);
+                            setErrorMessage('Invalid receipt');
                             return;
                         }
 
-                        const { items } = receiptDataOption.value;
-                        const uniqueItems: UniqueItem[] = items.map((item, index) => ({
+                        const parseResult = Result.fromThrowable(receiptDocumentSchema.parse)(jsonParseResult.value);
+                        if (parseResult.isErr()) {
+                            console.error(parseResult.error);
+                            setReceiptItems([]);
+                            setErrorMessage('Invalid receipt');
+                            return;
+                        }
+
+                        const receiptDocument = parseResult.value;
+                        const items = receiptDocument[0].ticket.document.receipt.items.map((item, index) => ({
                             ...item,
                             index,
                         }));
-                        setReceiptData({ items: uniqueItems });
+                        setReceiptItems(items);
                         setErrorMessage('');
                     }}
                 />
@@ -47,10 +62,17 @@ export default function ReceiptForm() {
                 <button
                     className="cursor-pointer px-2 pt-1 pb-2 text-start text-sm font-bold"
                     onClick={() => {
-                        const opt = parseReceipt(JSON.stringify(testfile));
-                        if (opt.isOk()) {
-                            setReceiptData(opt.value);
+                        const parseResult = Result.fromThrowable(receiptDocumentSchema.parse)(testfile);
+                        if (parseResult.isOk()) {
+                            const receiptDocument = parseResult.value;
+                            const items = receiptDocument[0].ticket.document.receipt.items.map((item, index) => ({
+                                ...item,
+                                index,
+                            }));
+                            setReceiptItems(items);
                             setErrorMessage('');
+                        } else {
+                            console.error(parseResult.error);
                         }
                     }}
                 >
@@ -58,11 +80,11 @@ export default function ReceiptForm() {
                 </button>
             </fieldset>
 
-            {(errorMessage || receiptData) && (
-                <div className={twMerge('px-2 text-sm', receiptData ? '' : '')}>
+            {(errorMessage || !!receiptItems.length) && (
+                <div className={twMerge('px-2 text-sm', receiptItems.length ? '' : '')}>
                     {errorMessage
                         ? `✘ ${errorMessage}`
-                        : receiptData && `✔ найдено позиций: ${receiptData.items.length}`}
+                        : !!receiptItems.length && `✔ найдено позиций: ${receiptItems.length}`}
                 </div>
             )}
         </>

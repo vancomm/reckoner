@@ -4,31 +4,3 @@
 html {
     font-size: 20px;
 }
-
-:root {
-    --bg-success: rgba(166, 233, 161, 0.8);
-    --bg-success-secondary: rgb(166, 233, 161, 0.6);
-    --color-success: #333;
-
-    --bg-error: rgb(247, 177, 177);
-    --color-error: rgb(124, 8, 8);
-
-    --gap: 1rem;
-
-    /* --bg-start: rgb(8, 90, 198);
-    --bg-end: rgb(0, 187, 255); */
-
-    --bg-overlay-alpha: 0.3;
-
-    --bg-overlay-active: rgba(0, 0, 0, 0.6);
-    --bg-overlay-hover: rgba(0, 0, 0, 0.4);
-    --bg-overlay: rgba(0, 0, 0, var(--bg-overlay-alpha));
-    --bg-overlay-light: rgba(0, 0, 0, 0.15);
-
-    --color-primary: white;
-    --color-faded: rgba(255, 255, 255, 0.7);
-
-    --bg-input-btn: rgba(99, 99, 99, 0.7);
-    --green: #1faa42;
-    --divider: rgba(197, 197, 197, 0.6);
-}

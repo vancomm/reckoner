@@ -15,7 +15,6 @@ export default function WelcomePopup() {
 
     React.useEffect(() => {
         idbCache.get('hideWelcomeMessage').then((r) => {
-            console.log(r);
             r.match(
                 (v) => setHidden(v),
                 () => {

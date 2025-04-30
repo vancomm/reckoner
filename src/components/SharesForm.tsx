@@ -1,23 +1,28 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAppState } from '../contexts/AppStateContext';
 import formatMoney from '../lib/formatMoney';
-import { UniqueItem } from '../lib/parseReceiptDocument';
+import { UniqueItem } from '../lib/receiptDocument';
+import { ItemShare } from '../lib/shareholder';
 import Fraction from './Fraction';
 
-export default function SplitForm() {
-    const { receiptData } = useAppState();
+interface SplitFormProps {
+    receiptItems: UniqueItem[];
+    names: string[];
+    setNames: React.Dispatch<React.SetStateAction<string[]>>;
+    setItemShares: React.Dispatch<React.SetStateAction<ItemShare[]>>;
+    findOneItemShare: (props: { item: UniqueItem; name: string }) => ItemShare | undefined;
+    findManyItemShares: (props: { item?: UniqueItem; name?: string }) => ItemShare[];
+    getShareCount: (item: UniqueItem) => number;
+}
 
-    if (!receiptData) return null;
-    const items = receiptData.items;
-
+export default function SplitForm({ receiptItems, ...props }: SplitFormProps) {
     return (
         <>
             <h3 className="ml-1">Разделите свои покупки:</h3>
             <div className="flex flex-col gap-2">
-                {items.map((item) => (
-                    <SharesForm key={item.index} item={item} />
+                {receiptItems.map((item) => (
+                    <SharesForm key={item.index} item={item} {...props} />
                 ))}
             </div>
         </>
@@ -26,22 +31,29 @@ export default function SplitForm() {
 
 interface SplitControlProps {
     item: UniqueItem;
+    names: string[];
+    setNames: React.Dispatch<React.SetStateAction<string[]>>;
+    setItemShares: React.Dispatch<React.SetStateAction<ItemShare[]>>;
+    findOneItemShare: (props: { item: UniqueItem; name: string }) => ItemShare | undefined;
+    findManyItemShares: (props: { item?: UniqueItem; name?: string }) => ItemShare[];
+    getShareCount: (item: UniqueItem) => number;
 }
 
-function SharesForm({ item }: SplitControlProps) {
-    const {
-        names,
-        setInputRecords,
-        inputRecordsInterface: { getRecord, getRecords, getShares },
-    } = useAppState();
-
+function SharesForm({
+    item,
+    names,
+    setItemShares,
+    findOneItemShare,
+    findManyItemShares,
+    getShareCount,
+}: SplitControlProps) {
     const [equalShares, setEqualShares] = React.useState(true);
 
-    const records = getRecords({ item });
-    const isFilled = records.some((r) => r.share > 0);
-    const shares = getShares(item);
-    const buyers = records.filter((r) => r.share);
-    const soloBuyer = buyers.length === 1;
+    const itemShares = findManyItemShares({ item });
+    const isFilled = itemShares.some((r) => r.share > 0);
+    const buyers = itemShares.filter((r) => r.share);
+    const shareCount = getShareCount(item);
+    const soloShareholder = buyers.length === 1;
 
     return (
         <div className="flex flex-col gap-y-2 rounded-md bg-black/20 px-4 pt-3 pb-2 sm:p-5">
@@ -64,7 +76,7 @@ function SharesForm({ item }: SplitControlProps) {
             <div className="flex flex-wrap gap-2">
                 {names.map((name, i) => {
                     const id = `${item.name}-${item.index}-${name}-${i}`;
-                    const checked = (getRecord({ item, name })?.share ?? 0) > 0;
+                    const checked = (findOneItemShare({ item, name })?.share ?? 0) > 0;
                     return (
                         <label
                             key={id}
@@ -82,7 +94,7 @@ function SharesForm({ item }: SplitControlProps) {
                                     }
 
                                     const updated = { item, name, share: e.target.checked ? 1 : 0 };
-                                    setInputRecords((records) => {
+                                    setItemShares((records) => {
                                         const stale = records.find((r) => r.item === item && r.name === name);
                                         return stale
                                             ? records.map((r) => (r === stale ? updated : r))
@@ -104,18 +116,18 @@ function SharesForm({ item }: SplitControlProps) {
                         {buyers.map((buyer) => (
                             <React.Fragment key={buyer.name}>
                                 <div>{`${buyer.name}:`}</div>
-                                <div className="font-mono">{formatMoney(item.sum * (buyer.share / shares))}</div>
+                                <div className="font-mono">{formatMoney(item.sum * (buyer.share / shareCount))}</div>
 
                                 <div
                                     className={twMerge(
                                         'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
+                                        !equalShares && !soloShareholder && 'text-white/50'
                                     )}
                                 >{`=`}</div>
                                 <div
                                     className={twMerge(
                                         'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
+                                        !equalShares && !soloShareholder && 'text-white/50'
                                     )}
                                 >
                                     {formatMoney(item.price)}
@@ -123,16 +135,16 @@ function SharesForm({ item }: SplitControlProps) {
                                 <div
                                     className={twMerge(
                                         'font-mono text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white/50'
+                                        !equalShares && !soloShareholder && 'text-white/50'
                                     )}
                                 >{`×`}</div>
                                 <Fraction
                                     className={twMerge(
                                         'text-white/0 transition-colors',
-                                        !equalShares && !soloBuyer && 'text-white'
+                                        !equalShares && !soloShareholder && 'text-white'
                                     )}
                                     numerator={buyer.share}
-                                    denominator={shares}
+                                    denominator={shareCount}
                                 />
                             </React.Fragment>
                         ))}

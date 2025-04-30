@@ -1,24 +1,19 @@
 import React from 'react';
 
-import { useAppState } from '../contexts/AppStateContext';
+import { Shareholder } from '../lib/shareholder';
 import FocusableOnMountInput from './FocusableOnMountInput';
 import PillInput from './PillInput';
-
-export interface Shareholder {
-    id: string;
-    name: string;
-}
 
 interface ShareholderFormProps {
     shareholders: Shareholder[];
     setShareholders: React.Dispatch<React.SetStateAction<Shareholder[]>>;
+    names: string[];
+    setNames: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function ShareholderForm({ shareholders, setShareholders }: ShareholderFormProps) {
-    const { names, setNames } = useAppState();
-    const [editableNameIndex, setEditableNameIndex] = React.useState<number>();
-
+export default function ShareholderForm({ shareholders, setShareholders, names, setNames }: ShareholderFormProps) {
     const [editableShareholderId, setEditableShareholderId] = React.useState<string>();
+    const [editableNameIndex, setEditableNameIndex] = React.useState<number>();
 
     return (
         <>
@@ -43,14 +38,12 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                             key={`name-form-${shareholder.id}`}
                             editable={editable}
                             onClickOutside={() => {
-                                console.log('onclickoutside');
                                 if (editable) unsetEditable();
                             }}
                             onClose={deleteShareholder}
                             pillProps={{
                                 children: shareholder.name,
                                 onClick: () => {
-                                    console.log('onclick', shareholder);
                                     if (!editable) setSelfEditable();
                                 },
                             }}
@@ -67,7 +60,6 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                                 onKeyDown: (e) => {
                                     const target = e.target as EventTarget & HTMLInputElement;
                                     const { value } = target;
-                                    console.log(e.key, value);
                                     if (e.key === 'Enter' || e.key === 'Escape') {
                                         if (value) {
                                             updateName(value);
@@ -90,7 +82,6 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                             key={`name-form-${index}`}
                             editable={index === editableNameIndex}
                             onClickOutside={() => {
-                                console.log('onclickoutside', index, name);
                                 if (editableNameIndex === index) setEditableNameIndex(undefined);
                             }}
                             onClose={() => {
@@ -99,7 +90,6 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                             pillProps={{
                                 children: name,
                                 onClick: () => {
-                                    console.log('onclick', index, name);
                                     if (editableNameIndex !== index) setEditableNameIndex(index);
                                 },
                             }}
@@ -118,7 +108,6 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                                 onKeyDown: (e) => {
                                     const target = e.target as EventTarget & HTMLInputElement;
                                     const { value } = target;
-                                    console.log(e.key, value);
                                     if (e.key === 'Enter' || e.key === 'Escape') {
                                         if (value) {
                                             updateName(value);

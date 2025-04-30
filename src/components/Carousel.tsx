@@ -45,18 +45,16 @@ function CarouselContextProvider({ children }: { children: React.ReactNode }) {
     return <CarouselContext.Provider value={value}>{children}</CarouselContext.Provider>;
 }
 
-const useCarouselContext = () => React.useContext(CarouselContext);
-
 export default function Carousel(props: React.HTMLAttributes<HTMLDivElement>) {
     return (
         <CarouselContextProvider>
-            <InnerCarousel {...props} />
+            <CarouselContainer {...props} />
         </CarouselContextProvider>
     );
 }
 
-function InnerCarousel({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    const { items, setActiveChild } = useCarouselContext();
+function CarouselContainer({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    const { items, setActiveChild } = React.useContext(CarouselContext);
 
     React.useEffect(() => {
         setActiveChild(items[0]);
@@ -71,7 +69,7 @@ function InnerCarousel({ className, children, ...props }: React.HTMLAttributes<H
 }
 
 function CarouselControls() {
-    const { items, activeChild, setActiveChild } = useCarouselContext();
+    const { items, activeChild, setActiveChild } = React.useContext(CarouselContext);
 
     const handlePrev = () => {
         setActiveChild((state) => {
@@ -115,7 +113,7 @@ interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function CarouselItem({ id, className, ...props }: ItemProps) {
-    const { register, activeChild } = useCarouselContext();
+    const { register, activeChild } = React.useContext(CarouselContext);
 
     React.useEffect(() => {
         register(id);

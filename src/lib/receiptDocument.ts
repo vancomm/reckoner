@@ -12,6 +12,10 @@ export const receiptItemSchema = z.object({
 
 export type ReceiptItem = z.infer<typeof receiptItemSchema>;
 
+export interface UniqueItem extends ReceiptItem {
+    index: number;
+}
+
 export const receiptDocumentItemSchema = z.object({
     ticket: z.object({
         document: z.object({
