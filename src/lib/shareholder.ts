@@ -8,6 +8,5 @@ export interface Shareholder {
 export interface ItemShare {
     item: UniqueItem;
     share: number;
-    // shareholder: Shareholder;
-    name: string;
+    shareholder: Shareholder;
 }

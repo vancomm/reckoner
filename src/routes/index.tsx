@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import ReceiptForm from '@/components/ReceiptForm';
 import Results from '@/components/Results';
 import ShareholderForm from '@/components/ShareholderForm';
-import SplitForm from '@/components/SharesForm';
+import SharesForm from '@/components/SharesForm';
 import WelcomePopup from '@/components/WelcomePopup';
 import idbCache from '@/lib/idbCache';
 import { UniqueItem } from '@/lib/receiptDocument';
@@ -14,18 +14,19 @@ import { ItemShare, Shareholder } from '@/lib/shareholder';
 export const Route = createFileRoute('/')({
     component: App,
     loader: async () => {
-        const res = await idbCache.get('names');
-        return { names: res.unwrapOr<string[]>([]) };
+        const cachedShareholdersResult = await idbCache.get('shareholders');
+        return {
+            shareholders: cachedShareholdersResult.unwrapOr<Shareholder[]>([]),
+        };
     },
 });
 
 function App() {
-    const { names: cachedShareholderNames } = Route.useLoaderData();
+    const { shareholders: cachedShareholders } = Route.useLoaderData();
 
-    const [shareholders, setShareholders] = React.useState<Shareholder[]>(
-        cachedShareholderNames.map((name) => ({ name, id: name }))
-    );
-    const [names, setNames] = React.useState(cachedShareholderNames);
+    const [shareholders, setShareholders] = React.useState<Shareholder[]>(cachedShareholders);
+
+    // const [names, setNames] = React.useState(cachedShareholderNames);
     const [receiptItems, setReceiptItems] = React.useState<UniqueItem[]>([]);
     const [itemShares, setItemShares] = React.useState<ItemShare[]>([]);
 
@@ -34,23 +35,23 @@ function App() {
     }, [receiptItems]);
 
     React.useEffect(() => {
-        idbCache.set('names', names);
+        idbCache.set('shareholders', shareholders);
         setItemShares([]);
-    }, [names]);
+    }, [shareholders]);
 
     const findOneItemShare = React.useMemo(
         () =>
-            ({ item, name }: { item: UniqueItem; name: string }) =>
-                itemShares.find((x) => x.item === item && x.name === name),
+            ({ item, shareholderId }: { item: UniqueItem; shareholderId: string }) =>
+                itemShares.find((x) => x.item === item && x.shareholder.id === shareholderId),
         [itemShares]
     );
 
     const findManyItemShares = React.useMemo(
         () =>
-            ({ item, name }: { item?: UniqueItem; name?: string }) =>
+            ({ item, shareholderId }: { item?: UniqueItem; shareholderId?: string }) =>
                 itemShares.filter((x) => {
                     if (item && x.item !== item) return false;
-                    if (name && x.name !== name) return false;
+                    if (shareholderId && x.shareholder.id !== shareholderId) return false;
                     return true;
                 }),
         [itemShares]
@@ -65,22 +66,16 @@ function App() {
         <>
             <WelcomePopup />
             <Container>
-                <ShareholderForm
-                    names={names}
-                    setNames={setNames}
-                    shareholders={shareholders}
-                    setShareholders={setShareholders}
-                />
+                <ShareholderForm shareholders={shareholders} setShareholders={setShareholders} />
             </Container>
             <Container>
                 <ReceiptForm receiptItems={receiptItems} setReceiptItems={setReceiptItems} />
             </Container>
             {!!receiptItems.length && (
                 <Container>
-                    <SplitForm
-                        names={names}
+                    <SharesForm
+                        shareholders={shareholders}
                         receiptItems={receiptItems}
-                        setNames={setNames}
                         setItemShares={setItemShares}
                         getShareCount={getShareCount}
                         findManyItemShares={findManyItemShares}
@@ -90,7 +85,7 @@ function App() {
             )}
             {!!receiptItems.length && (
                 <Container>
-                    <Results names={names} itemShares={itemShares} receiptItems={receiptItems} />
+                    <Results shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
                 </Container>
             )}
         </>

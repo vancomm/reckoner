@@ -7,15 +7,15 @@ import ExpandMore from '@/components/ExpandMore';
 import Fraction from '@/components/Fraction';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
-import { ItemShare } from '@/lib/shareholder';
+import { ItemShare, Shareholder } from '@/lib/shareholder';
 
 interface ResultsProps {
     receiptItems: UniqueItem[];
-    names: string[];
+    shareholders: Shareholder[];
     itemShares: ItemShare[];
 }
 
-export default function Results({ names, itemShares, receiptItems }: ResultsProps) {
+export default function Results({ shareholders, itemShares, receiptItems }: ResultsProps) {
     const unfilledItems = receiptItems.filter((item) => !itemShares.some((r) => r.item === item && r.share > 0));
 
     const itemSharesMap = itemShares.reduce((acc, { item, share }) => {
@@ -24,9 +24,9 @@ export default function Results({ names, itemShares, receiptItems }: ResultsProp
         return acc;
     }, new Map<UniqueItem, number>());
 
-    const getTotalsByName = (name: string) =>
+    const getTotalsById = (shareholderId: string) =>
         itemShares
-            .filter((r) => r.name === name && r.share > 0)
+            .filter((r) => r.shareholder.id === shareholderId && r.share > 0)
             .reduce((acc, r) => {
                 return [...acc, { ...r, shares: itemSharesMap.get(r.item) ?? r.share }];
             }, [] as TotalRecord[]);
@@ -57,8 +57,8 @@ export default function Results({ names, itemShares, receiptItems }: ResultsProp
                 )}
             </div>
             <div className="flex flex-col gap-2">
-                {names.map((name, index) => (
-                    <TotalCard key={`total-card-${index}`} name={name} records={getTotalsByName(name)} />
+                {shareholders.map((sh, index) => (
+                    <TotalCard key={`total-card-${index}`} name={sh.name} records={getTotalsById(sh.id)} />
                 ))}
             </div>
         </>

@@ -4,49 +4,47 @@ import { twMerge } from 'tailwind-merge';
 import Fraction from '@/components/Fraction';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
-import { ItemShare } from '@/lib/shareholder';
+import { ItemShare, Shareholder } from '@/lib/shareholder';
 
 interface SplitFormProps {
     receiptItems: UniqueItem[];
-    names: string[];
-    setNames: React.Dispatch<React.SetStateAction<string[]>>;
+    shareholders: Shareholder[];
     setItemShares: React.Dispatch<React.SetStateAction<ItemShare[]>>;
-    findOneItemShare: (props: { item: UniqueItem; name: string }) => ItemShare | undefined;
-    findManyItemShares: (props: { item?: UniqueItem; name?: string }) => ItemShare[];
+    findOneItemShare: (props: { item: UniqueItem; shareholderId: string }) => ItemShare | undefined;
+    findManyItemShares: (props: { item?: UniqueItem; shareholderId?: string }) => ItemShare[];
     getShareCount: (item: UniqueItem) => number;
 }
 
-export default function SplitForm({ receiptItems, ...props }: SplitFormProps) {
+export default function SharesForm({ receiptItems, ...props }: SplitFormProps) {
     return (
         <>
             <h3 className="ml-1">Разделите свои покупки:</h3>
             <div className="flex flex-col gap-2">
                 {receiptItems.map((item) => (
-                    <SharesForm key={item.index} item={item} {...props} />
+                    <ItemShareForm key={item.index} item={item} {...props} />
                 ))}
             </div>
         </>
     );
 }
 
-interface SplitControlProps {
+interface ItemShareFormProps {
     item: UniqueItem;
-    names: string[];
-    setNames: React.Dispatch<React.SetStateAction<string[]>>;
+    shareholders: Shareholder[];
     setItemShares: React.Dispatch<React.SetStateAction<ItemShare[]>>;
-    findOneItemShare: (props: { item: UniqueItem; name: string }) => ItemShare | undefined;
-    findManyItemShares: (props: { item?: UniqueItem; name?: string }) => ItemShare[];
+    findOneItemShare: (props: { item: UniqueItem; shareholderId: string }) => ItemShare | undefined;
+    findManyItemShares: (props: { item?: UniqueItem; shareholderId?: string }) => ItemShare[];
     getShareCount: (item: UniqueItem) => number;
 }
 
-function SharesForm({
+function ItemShareForm({
     item,
-    names,
+    shareholders,
     setItemShares,
     findOneItemShare,
     findManyItemShares,
     getShareCount,
-}: SplitControlProps) {
+}: ItemShareFormProps) {
     const [equalShares, setEqualShares] = React.useState(true);
 
     const itemShares = findManyItemShares({ item });
@@ -74,9 +72,9 @@ function SharesForm({
                 </h3>
             </div>
             <div className="flex flex-wrap gap-2">
-                {names.map((name, i) => {
+                {shareholders.map((sh, i) => {
                     const id = `${item.name}-${item.index}-${name}-${i}`;
-                    const checked = (findOneItemShare({ item, name })?.share ?? 0) > 0;
+                    const checked = (findOneItemShare({ item, shareholderId: sh.id })?.share ?? 0) > 0;
                     return (
                         <label
                             key={id}
@@ -92,10 +90,15 @@ function SharesForm({
                                     if (buyers.length === 2 && !e.target.checked) {
                                         setEqualShares(true);
                                     }
-
-                                    const updated = { item, name, share: e.target.checked ? 1 : 0 };
+                                    const updated: ItemShare = {
+                                        item,
+                                        shareholder: sh,
+                                        share: e.target.checked ? 1 : 0,
+                                    };
                                     setItemShares((records) => {
-                                        const stale = records.find((r) => r.item === item && r.name === name);
+                                        const stale = records.find(
+                                            (r) => r.item === item && r.shareholder.id === sh.id
+                                        );
                                         return stale
                                             ? records.map((r) => (r === stale ? updated : r))
                                             : [...records, updated];
@@ -104,7 +107,7 @@ function SharesForm({
                             />
                             <div className="flex items-center gap-1">
                                 <div className="font-mono">{checked ? '-' : '+'}</div>
-                                <div>{name}</div>
+                                <div>{sh.name}</div>
                             </div>
                         </label>
                     );
@@ -114,8 +117,8 @@ function SharesForm({
                 <div>
                     <div className={twMerge('grid w-fit grid-cols-[repeat(6,min-content)] gap-x-2 gap-y-2')}>
                         {buyers.map((buyer) => (
-                            <React.Fragment key={buyer.name}>
-                                <div>{`${buyer.name}:`}</div>
+                            <React.Fragment key={buyer.shareholder.id}>
+                                <div>{`${buyer.shareholder.name}:`}</div>
                                 <div className="font-mono">{formatMoney(item.sum * (buyer.share / shareCount))}</div>
 
                                 <div

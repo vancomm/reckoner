@@ -30,9 +30,7 @@ export default function PillInput({
         <div ref={ref} onClick={onClick} {...props}>
             {editable ? (
                 <FocusableOnMountInput
-                    value={inputProps?.value}
                     placeholder="Введите текст..."
-                    style={{ width: `${String(inputProps?.value).length + 5}ch` }}
                     className="h-9"
                     {...inputProps}
                 />

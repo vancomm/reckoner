@@ -1,6 +1,8 @@
 import * as idb from 'idb-keyval';
 import { Result, err, ok } from 'neverthrow';
 
+import { Shareholder } from './shareholder';
+
 const version = 1;
 const hoursUntilStale = -1;
 
@@ -20,6 +22,7 @@ export interface IDBCache<T> {
 
 export interface CacheKeyMap {
     names: string[];
+    shareholders: Shareholder[];
     hideWelcomeMessage: boolean;
 }
 

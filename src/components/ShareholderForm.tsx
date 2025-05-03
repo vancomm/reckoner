@@ -7,13 +7,10 @@ import { Shareholder } from '@/lib/shareholder';
 interface ShareholderFormProps {
     shareholders: Shareholder[];
     setShareholders: React.Dispatch<React.SetStateAction<Shareholder[]>>;
-    names: string[];
-    setNames: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export default function ShareholderForm({ shareholders, setShareholders, names, setNames }: ShareholderFormProps) {
+export default function ShareholderForm({ shareholders, setShareholders }: ShareholderFormProps) {
     const [editableShareholderId, setEditableShareholderId] = React.useState<string>();
-    const [editableNameIndex, setEditableNameIndex] = React.useState<number>();
 
     return (
         <>
@@ -48,71 +45,22 @@ export default function ShareholderForm({ shareholders, setShareholders, names, 
                                 },
                             }}
                             inputProps={{
-                                value: shareholder.name,
-                                onChange: (e) => {
-                                    updateName(e.target.value);
-                                },
+                                defaultValue: shareholder.name,
                                 onBlur: (e) => {
                                     if (!e.target.value) {
                                         deleteShareholder();
                                     }
+                                    unsetEditable();
                                 },
                                 onKeyDown: (e) => {
                                     const target = e.target as EventTarget & HTMLInputElement;
-                                    const { value } = target;
-                                    if (e.key === 'Enter' || e.key === 'Escape') {
-                                        if (value) {
-                                            updateName(value);
-                                            unsetEditable();
-                                        }
+                                    if (e.key === 'Escape') {
+                                        unsetEditable();
                                     }
-                                },
-                            }}
-                        />
-                    );
-                })}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1">
-                {names.map((name, index) => {
-                    const updateName = (name: string) =>
-                        setNames((names) => names.map((n, i) => (i === index ? name.trim() : n)));
-                    return (
-                        <PillInput
-                            key={`name-form-${index}`}
-                            editable={index === editableNameIndex}
-                            onClickOutside={() => {
-                                if (editableNameIndex === index) setEditableNameIndex(undefined);
-                            }}
-                            onClose={() => {
-                                setNames((state) => state.filter((_, i) => i !== index));
-                            }}
-                            pillProps={{
-                                children: name,
-                                onClick: () => {
-                                    if (editableNameIndex !== index) setEditableNameIndex(index);
-                                },
-                            }}
-                            inputProps={{
-                                value: name,
-                                onChange: (e) => {
-                                    const { value } = e.target;
-                                    updateName(value);
-                                },
-                                onBlur: (e) => {
-                                    const { value } = e.target;
-                                    if (!value) {
-                                        setNames((state) => state.filter((_, i) => i !== index));
-                                    }
-                                },
-                                onKeyDown: (e) => {
-                                    const target = e.target as EventTarget & HTMLInputElement;
-                                    const { value } = target;
-                                    if (e.key === 'Enter' || e.key === 'Escape') {
-                                        if (value) {
-                                            updateName(value);
-                                            setEditableNameIndex(undefined);
-                                        }
+                                    if (e.key === 'Enter') {
+                                        if (target.value.length === 0) return;
+                                        updateName(target.value);
+                                        unsetEditable();
                                     }
                                 },
                             }}
@@ -123,14 +71,17 @@ export default function ShareholderForm({ shareholders, setShareholders, names, 
                     name={''}
                     focusOnMount={false}
                     placeholder="Добавить..."
-                    style={{ width: `20ch` }}
                     className="h-9"
                     onKeyDown={(e) => {
                         const target = e.target as EventTarget & HTMLInputElement;
                         const { value } = target;
-                        if (e.key === 'Enter') {
-                            if (value) {
-                                setNames((ns) => [...ns, value]);
+                        if (e.key === 'Escape') {
+                            target.blur();
+                        } else if (e.key === 'Enter') {
+                            if (value.length > 0) {
+                                setShareholders((shareholders) =>
+                                    shareholders.concat({ id: crypto.randomUUID(), name: value })
+                                );
                                 target.value = '';
                             }
                         }

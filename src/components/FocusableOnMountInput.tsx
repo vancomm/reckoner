@@ -24,6 +24,7 @@ export default function FocusableOnMountInput({
                 'w-full min-w-[10ch] rounded-sm border-none bg-black/30 p-1 pr-6 focus:bg-black/50 focus:outline-0',
                 className
             )}
+            style={{ width: `${String(ref.current?.value || ref.current?.defaultValue || ref.current?.placeholder || '').length + 5}ch` }}
             {...props}
         />
     );
