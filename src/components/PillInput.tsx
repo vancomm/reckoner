@@ -1,7 +1,7 @@
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 import { useOnClickOutside } from 'usehooks-ts';
 
-import Edit from '@/components/Edit';
 import FocusableOnMountInput, { FocusableOnMountInputProps } from '@/components/FocusableOnMountInput';
 import Pill, { PillProps } from '@/components/Pill';
 
@@ -14,6 +14,7 @@ interface PillInputProps extends React.InputHTMLAttributes<HTMLDivElement> {
 }
 
 export default function PillInput({
+    className,
     editable,
     onClose,
     onClickOutside,
@@ -27,18 +28,20 @@ export default function PillInput({
     useOnClickOutside(ref, () => onClickOutside?.());
 
     return (
-        <div ref={ref} onClick={onClick} {...props}>
+        <div
+            ref={ref}
+            className={twMerge('pill-input overflow-hidden rounded', className)}
+            onClick={onClick}
+            {...props}
+        >
             {editable ? (
                 <FocusableOnMountInput
                     placeholder="Введите текст..."
-                    className="h-9"
                     {...inputProps}
+                    className={twMerge('h-9', inputProps?.className)}
                 />
             ) : (
-                <Pill className="group h-9" onClose={onClose} {...pillProps}>
-                    <Edit className="fill-white opacity-50 group-hover:opacity-100" />
-                    {pillProps?.children}
-                </Pill>
+                <Pill onClose={onClose} {...pillProps} className={twMerge('group h-9', pillProps?.className)} />
             )}
         </div>
     );

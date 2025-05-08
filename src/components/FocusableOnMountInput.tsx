@@ -20,11 +20,10 @@ export default function FocusableOnMountInput({
         <input
             ref={ref}
             type="text"
-            className={twMerge(
-                'w-full min-w-[10ch] rounded-sm border-none bg-black/30 p-1 pr-6 focus:bg-black/50 focus:outline-0',
-                className
-            )}
-            style={{ width: `${String(ref.current?.value || ref.current?.defaultValue || ref.current?.placeholder || '').length + 5}ch` }}
+            className={twMerge('w-full min-w-[10ch] bg-black/30 p-1 pr-6 focus:bg-black/50 focus:outline-0', className)}
+            style={{
+                width: `${String(ref.current?.value || ref.current?.defaultValue || ref.current?.placeholder || '').length + 5}ch`,
+            }}
             {...props}
         />
     );

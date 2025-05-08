@@ -26,18 +26,17 @@ function App() {
 
     const [shareholders, setShareholders] = React.useState<Shareholder[]>(cachedShareholders);
 
-    // const [names, setNames] = React.useState(cachedShareholderNames);
     const [receiptItems, setReceiptItems] = React.useState<UniqueItem[]>([]);
     const [itemShares, setItemShares] = React.useState<ItemShare[]>([]);
-
-    React.useEffect(() => {
-        setItemShares([]);
-    }, [receiptItems]);
 
     React.useEffect(() => {
         idbCache.set('shareholders', shareholders);
         setItemShares([]);
     }, [shareholders]);
+
+    React.useEffect(() => {
+        setItemShares([]);
+    }, [receiptItems]);
 
     const findOneItemShare = React.useMemo(
         () =>
@@ -73,14 +72,20 @@ function App() {
             </Container>
             {!!receiptItems.length && (
                 <Container>
-                    <SharesForm
-                        shareholders={shareholders}
-                        receiptItems={receiptItems}
-                        setItemShares={setItemShares}
-                        getShareCount={getShareCount}
-                        findManyItemShares={findManyItemShares}
-                        findOneItemShare={findOneItemShare}
-                    />
+                    <h3 className="ml-1">Разделите свои покупки:</h3>
+                    <div className="flex flex-col gap-2">
+                        {receiptItems.map((item) => (
+                            <SharesForm
+                                key={item.index}
+                                item={item}
+                                shareholders={shareholders}
+                                setItemShares={setItemShares}
+                                getShareCount={getShareCount}
+                                findManyItemShares={findManyItemShares}
+                                findOneItemShare={findOneItemShare}
+                            />
+                        ))}
+                    </div>
                 </Container>
             )}
             {!!receiptItems.length && (
