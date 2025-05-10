@@ -45,22 +45,6 @@ function App() {
         [itemShares]
     );
 
-    const findManyItemShares = React.useMemo(
-        () =>
-            ({ item, shareholderId }: { item?: UniqueItem; shareholderId?: string }) =>
-                itemShares.filter((x) => {
-                    if (item && x.item !== item) return false;
-                    if (shareholderId && x.shareholder.id !== shareholderId) return false;
-                    return true;
-                }),
-        [itemShares]
-    );
-
-    const getShareCount: (item: UniqueItem) => number = React.useMemo(
-        () => (item) => findManyItemShares({ item }).reduce((sum, x) => sum + x.share, 0),
-        [findManyItemShares]
-    );
-
     return (
         <>
             <WelcomePopup />
@@ -79,9 +63,8 @@ function App() {
                                 key={item.index}
                                 item={item}
                                 shareholders={shareholders}
+                                itemShares={itemShares.filter((x) => x.item === item)}
                                 setItemShares={setItemShares}
-                                getShareCount={getShareCount}
-                                findManyItemShares={findManyItemShares}
                                 findOneItemShare={findOneItemShare}
                             />
                         ))}

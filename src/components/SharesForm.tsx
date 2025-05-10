@@ -1,7 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-// import Fraction from '@/components/Fraction';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder, getShareholderClassNames } from '@/lib/shareholder';
@@ -13,23 +12,20 @@ import PillInput from './PillInput';
 interface SharesFormProps {
     item: UniqueItem;
     shareholders: Shareholder[];
+    itemShares: ItemShare[];
     setItemShares: React.Dispatch<React.SetStateAction<ItemShare[]>>;
     findOneItemShare: (props: { item: UniqueItem; shareholderId: string }) => ItemShare | undefined;
-    findManyItemShares: (props: { item?: UniqueItem; shareholderId?: string }) => ItemShare[];
-    getShareCount: (item: UniqueItem) => number;
 }
 
 export default function SharesForm({
     item,
     shareholders,
+    itemShares,
     setItemShares,
     findOneItemShare,
-    findManyItemShares,
-    // getShareCount,
 }: SharesFormProps) {
     const [collapsed, setCollapsed] = React.useState(true);
 
-    const itemShares = findManyItemShares({ item });
     const isFilled = itemShares.some((r) => r.share > 0);
     const activeShareholders = shareholders
         .map((shareholder, index) => ({
@@ -58,16 +54,16 @@ export default function SharesForm({
                 </h3>
             </div>
             <div className="flex flex-wrap gap-2">
-                {shareholders.map((sh, i) => {
-                    const id = `${item.name}-${item.index}-${i}`;
-                    const checked = (findOneItemShare({ item, shareholderId: sh.id })?.share ?? 0) > 0;
+                {shareholders.map((shareholder, index) => {
+                    const id = `${item.name}-${item.index}-${index}`;
+                    const checked = (findOneItemShare({ item, shareholderId: shareholder.id })?.share ?? 0) > 0;
                     return (
                         <label
                             key={id}
                             htmlFor={id}
                             className={twMerge(
                                 'cursor-pointer rounded-sm bg-[rgba(0,0,0,.2)] px-2 py-1 transition-colors select-none hover:bg-[rgba(0,0,0,.3)]',
-                                checked && getShareholderClassNames(i).bg,
+                                checked && getShareholderClassNames(index).bg,
                                 checked && 'text-black'
                             )}
                         >
@@ -79,22 +75,22 @@ export default function SharesForm({
                                 onChange={(e) => {
                                     const updated: ItemShare = {
                                         item,
-                                        shareholder: sh,
+                                        shareholder,
                                         share: e.target.checked ? 1 : 0,
                                     };
-                                    setItemShares((records) => {
-                                        const stale = records.find(
-                                            (r) => r.item === item && r.shareholder.id === sh.id
+                                    setItemShares((xs) => {
+                                        const previous = xs.find(
+                                            (x) => x.item === item && x.shareholder.id === shareholder.id
                                         );
-                                        return stale
-                                            ? records.map((r) => (r === stale ? updated : r))
-                                            : [...records, updated];
+                                        return previous
+                                            ? xs.map((x) => (x === previous ? updated : x))
+                                            : [...xs, updated];
                                     });
                                 }}
                             />
                             <div className="flex items-center gap-1">
                                 <div className="font-mono">{checked ? '-' : '+'}</div>
-                                <div>{sh.name}</div>
+                                <div>{shareholder.name}</div>
                             </div>
                         </label>
                     );
@@ -102,7 +98,7 @@ export default function SharesForm({
             </div>
             <div
                 className={twMerge(
-                    'grid h-4 min-h-1 grid-flow-col overflow-hidden rounded bg-white/30 transition-colors',
+                    'grid h-4 min-h-1 grid-flow-col overflow-hidden rounded bg-white/10 transition-colors',
                     isFilled && `grid-cols-(--sharebar-columns)`
                 )}
                 style={{
@@ -125,24 +121,25 @@ export default function SharesForm({
                         указать пропорции
                     </label>
                     <Collapsible open={!collapsed}>
-                        <div className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center gap-x-3 gap-y-2">
+                        <div className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center justify-center gap-x-3 gap-y-2">
                             {activeShareholders.map(({ shareholder, share }, i) => (
-                                <ShareholderShareForm
-                                    key={i}
-                                    shareholder={shareholder}
-                                    share={share}
-                                    setShare={(share) => {
-                                        const updated: ItemShare = { item, shareholder, share };
-                                        setItemShares((records) => {
-                                            const stale = records.find(
-                                                (r) => r.item === item && r.shareholder.id === shareholder.id
-                                            );
-                                            return stale
-                                                ? records.map((r) => (r === stale ? updated : r))
-                                                : [...records, updated];
-                                        });
-                                    }}
-                                />
+                                <React.Fragment key={i}>
+                                    <div>{shareholder.name}:</div>
+                                    <ShareInput
+                                        share={share}
+                                        setShare={(share) => {
+                                            const updated: ItemShare = { item, shareholder, share };
+                                            setItemShares((records) => {
+                                                const stale = records.find(
+                                                    (r) => r.item === item && r.shareholder.id === shareholder.id
+                                                );
+                                                return stale
+                                                    ? records.map((r) => (r === stale ? updated : r))
+                                                    : [...records, updated];
+                                            });
+                                        }}
+                                    />
+                                </React.Fragment>
                             ))}
                         </div>
                     </Collapsible>{' '}
@@ -152,46 +149,41 @@ export default function SharesForm({
     );
 }
 
-interface ShareholderShareFormProps {
-    shareholder: Shareholder;
+interface ShareInputProps {
     share: number;
     setShare: (share: number) => unknown;
 }
 
-function ShareholderShareForm({ shareholder, share, setShare }: ShareholderShareFormProps) {
+function ShareInput({ share, setShare }: ShareInputProps) {
     const [editable, setEditable] = React.useState(false);
 
     return (
-        <>
-            <div>{shareholder.name}:</div>
-            <PillInput
-                editable={editable}
-                pillProps={{
-                    children: (
-                        <>
-                            <div>{share}</div>
-                            <Edit className="fill-white opacity-50 group-hover:opacity-100" />
-                        </>
-                    ),
-                    onClick: () => setEditable((x) => !x),
-                }}
-                inputProps={{
-                    defaultValue: share,
-                    pattern: '\\d*',
-                    onBlur: () => setEditable(false),
-                    onChange: (e) => {
-                        e.target.value = e.target.value.replace(/[^0-9]/, '');
-                        if (e.target.value.length > 0) {
-                            setShare(Number(e.target.value));
-                        }
-                    },
-                    onKeyDown: (e) => {
-                        if (e.key === 'Escape' || e.key === 'Enter') {
-                            setEditable(false);
-                        }
-                    },
-                }}
-            />
-        </>
+        <PillInput
+            editable={editable}
+            pillProps={{
+                children: (
+                    <>
+                        <div>{share}</div>
+                        <Edit className="fill-white opacity-50 group-hover:opacity-100" />
+                    </>
+                ),
+                onClick: () => setEditable(true),
+            }}
+            inputProps={{
+                defaultValue: share,
+                onBlur: () => setEditable(false),
+                onChange: (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/, '');
+                    if (e.target.value.length > 0) {
+                        setShare(Number(e.target.value));
+                    }
+                },
+                onKeyDown: (e) => {
+                    if (e.key === 'Escape' || e.key === 'Enter') {
+                        setEditable(false);
+                    }
+                },
+            }}
+        />
     );
 }

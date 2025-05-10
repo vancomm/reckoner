@@ -7,20 +7,17 @@ import Pill, { PillProps } from '@/components/Pill';
 
 interface PillInputProps extends React.InputHTMLAttributes<HTMLDivElement> {
     editable?: boolean;
-    onClose?: () => unknown;
-    onClickOutside?: () => unknown;
     pillProps?: PillProps;
     inputProps?: FocusableOnMountInputProps;
+    onClickOutside?: () => unknown;
 }
 
 export default function PillInput({
     className,
     editable,
-    onClose,
-    onClickOutside,
-    onClick,
     inputProps,
     pillProps,
+    onClickOutside,
     ...props
 }: PillInputProps) {
     const ref = React.useRef<HTMLDivElement>(null!);
@@ -28,20 +25,11 @@ export default function PillInput({
     useOnClickOutside(ref, () => onClickOutside?.());
 
     return (
-        <div
-            ref={ref}
-            className={twMerge('pill-input overflow-hidden rounded', className)}
-            onClick={onClick}
-            {...props}
-        >
+        <div ref={ref} className={twMerge('pill-input overflow-hidden rounded', className)} {...props}>
             {editable ? (
-                <FocusableOnMountInput
-                    placeholder="Введите текст..."
-                    {...inputProps}
-                    className={twMerge('h-9', inputProps?.className)}
-                />
+                <FocusableOnMountInput {...inputProps} className={twMerge('h-9', inputProps?.className)} />
             ) : (
-                <Pill onClose={onClose} {...pillProps} className={twMerge('group h-9', pillProps?.className)} />
+                <Pill {...pillProps} className={twMerge('group h-9', pillProps?.className)} />
             )}
         </div>
     );

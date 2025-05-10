@@ -5,6 +5,7 @@ import FocusableOnMountInput from '@/components/FocusableOnMountInput';
 import PillInput from '@/components/PillInput';
 import { Shareholder, getShareholderClassNames } from '@/lib/shareholder';
 
+import Clear from './Clear';
 import Edit from './Edit';
 
 interface ShareholderFormProps {
@@ -51,12 +52,23 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                                 if (editable) unsetEditable();
                             }}
                             className={twMerge('border-b-4', getShareholderClassNames(i).border)}
-                            onClose={deleteShareholder}
                             pillProps={{
                                 children: (
                                     <>
                                         <Edit className="fill-white opacity-50 group-hover:opacity-100" />
                                         {shareholder.name}
+                                        <div className="ml-0.5 h-[80%] border-x-1 border-white/10" />
+                                        <button
+                                            className="cursor-pointer p-0.5"
+                                            onMouseDown={deleteShareholder}
+                                            tabIndex={-1}
+                                        >
+                                            <Clear
+                                                width="1em"
+                                                height="1em"
+                                                className="fill-white/50 hover:fill-white"
+                                            />
+                                        </button>
                                     </>
                                 ),
                                 onClick: () => {
@@ -64,6 +76,7 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                                 },
                             }}
                             inputProps={{
+                                placeholder: 'Имя...',
                                 defaultValue: shareholder.name,
                                 onBlur: (e) => {
                                     if (!e.target.value) {
