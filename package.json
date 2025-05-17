@@ -1,51 +1,52 @@
 {
-  "name": "reckoner",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@tailwindcss/typography": "^0.5.16",
-    "@tanstack/react-router": "^1.117.1",
-    "@tanstack/react-router-devtools": "^1.117.1",
-    "neverthrow": "^8.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-select": "^5.10.1",
-    "tailwind-merge": "^3.2.0",
-    "usehooks-ts": "^3.1.1",
-    "zod": "^3.24.3"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@tailwindcss/vite": "^4.1.4",
-    "@tanstack/router-plugin": "^1.117.2",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react-swc": "^3.8.0",
-    "eslint": "^9.22.0",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.1.4",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "^8.26.1",
-    "vite": "^6.3.1",
-    "vite-tsconfig-paths": "^5.1.4"
-  },
-  "optionalDependencies": {
-    "ajv": "^8.17.1",
-    "classnames": "^2.5.1",
-    "idb-keyval": "^6.2.1",
-    "react-markdown": "^10.1.0"
-  }
+    "name": "reckoner",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build --mode prod",
+        "lint": "eslint .",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@tailwindcss/typography": "^0.5.16",
+        "@tanstack/react-router": "^1.117.1",
+        "@tanstack/react-router-devtools": "^1.117.1",
+        "neverthrow": "^8.2.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-select": "^5.10.1",
+        "tailwind-merge": "^3.2.0",
+        "usehooks-ts": "^3.1.1",
+        "zod": "^3.24.3"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.22.0",
+        "@tailwindcss/vite": "^4.1.4",
+        "@tanstack/router-plugin": "^1.117.2",
+        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "@types/node": "^22.15.18",
+        "@types/react": "^19.0.10",
+        "@types/react-dom": "^19.0.4",
+        "@vitejs/plugin-react-swc": "^3.8.0",
+        "eslint": "^9.22.0",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.19",
+        "globals": "^16.0.0",
+        "prettier": "^3.5.3",
+        "prettier-plugin-tailwindcss": "^0.6.11",
+        "tailwindcss": "^4.1.4",
+        "typescript": "~5.7.2",
+        "typescript-eslint": "^8.26.1",
+        "vite": "^6.3.1",
+        "vite-tsconfig-paths": "^5.1.4"
+    },
+    "optionalDependencies": {
+        "ajv": "^8.17.1",
+        "classnames": "^2.5.1",
+        "idb-keyval": "^6.2.1",
+        "react-markdown": "^10.1.0"
+    }
 }
