@@ -12,24 +12,17 @@ interface PillInputProps extends React.InputHTMLAttributes<HTMLDivElement> {
     onClickOutside?: () => unknown;
 }
 
-export default function PillInput({
-    className,
-    editable,
-    inputProps,
-    pillProps,
-    onClickOutside,
-    ...props
-}: PillInputProps) {
+export default function PillInput({ editable, inputProps, pillProps, onClickOutside, ...props }: PillInputProps) {
     const ref = React.useRef<HTMLDivElement>(null!);
 
     useOnClickOutside(ref, () => onClickOutside?.());
 
     return (
-        <div ref={ref} className={twMerge('pill-input overflow-hidden rounded', className)} {...props}>
+        <div ref={ref} {...props}>
             {editable ? (
                 <FocusableOnMountInput {...inputProps} className={twMerge('h-9', inputProps?.className)} />
             ) : (
-                <Pill {...pillProps} className={twMerge('group h-9', pillProps?.className)} />
+                <Pill {...pillProps} className={twMerge('h-9', pillProps?.className)} />
             )}
         </div>
     );

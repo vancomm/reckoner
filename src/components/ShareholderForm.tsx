@@ -2,11 +2,11 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import FocusableOnMountInput from '@/components/FocusableOnMountInput';
-import PillInput from '@/components/PillInput';
-import { Shareholder, getShareholderClassNames } from '@/lib/shareholder';
+import { Shareholder, getShareholderColors } from '@/lib/shareholder';
 
 import Clear from './Clear';
 import Edit from './Edit';
+import WithClickOutside from './WithClickOutside';
 
 interface ShareholderFormProps {
     shareholders: Shareholder[];
@@ -18,93 +18,79 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
 
     return (
         <>
-            <h3 className="mx-1 flex justify-between">
-                <span>Между кем делим чек?</span>
-                {shareholders.length > 0 && (
-                    <button
-                        className="cursor-pointer text-white/50 underline hover:text-white/80"
-                        onClick={() => setShareholders([])}
-                    >
-                        Очистить
-                    </button>
-                )}
-            </h3>
+            <Header />
 
             <div className="flex flex-wrap items-center gap-1">
-                {shareholders?.map((shareholder, i) => {
+                {shareholders?.map(function ShareholderInput(shareholder, i) {
                     const editable = shareholder.id === editableShareholderId;
                     const updateName = (name: string) => {
-                        setShareholders((shareholders) =>
-                            shareholders.map((sh) => (sh.id === shareholder.id ? { ...shareholder, name } : sh))
-                        );
+                        setShareholders((shareholders) => shareholders.map((sh) => (sh.id === shareholder.id ? { ...shareholder, name } : sh)));
                     };
                     const deleteShareholder = () => {
                         setShareholders((shareholders) => shareholders.filter((sh) => sh.id !== shareholder.id));
                     };
-                    const setSelfEditable = () => setEditableShareholderId(shareholder.id);
+                    const setEditable = () => setEditableShareholderId(shareholder.id);
                     const unsetEditable = () => setEditableShareholderId(undefined);
 
                     return (
-                        <PillInput
+                        <WithClickOutside
                             key={`name-form-${shareholder.id}`}
-                            editable={editable}
                             onClickOutside={() => {
                                 if (editable) unsetEditable();
                             }}
-                            className={twMerge('border-b-4', getShareholderClassNames(i).border)}
-                            pillProps={{
-                                children: (
-                                    <>
-                                        <Edit className="fill-white opacity-50 group-hover:opacity-100" />
-                                        {shareholder.name}
-                                        <div className="ml-0.5 h-[80%] border-x-1 border-white/10" />
-                                        <button
-                                            className="cursor-pointer p-0.5"
-                                            onMouseDown={deleteShareholder}
-                                            tabIndex={-1}
-                                        >
-                                            <Clear
-                                                width="1em"
-                                                height="1em"
-                                                className="fill-white/50 hover:fill-white"
-                                            />
-                                        </button>
-                                    </>
-                                ),
-                                onClick: () => {
-                                    if (!editable) setSelfEditable();
-                                },
+                            onClick={() => {
+                                if (!editable) setEditable();
                             }}
-                            inputProps={{
-                                placeholder: 'Имя...',
-                                defaultValue: shareholder.name,
-                                onBlur: (e) => {
-                                    if (!e.target.value) {
-                                        deleteShareholder();
-                                    }
-                                    unsetEditable();
-                                },
-                                onKeyDown: (e) => {
-                                    const target = e.target as EventTarget & HTMLInputElement;
-                                    if (e.key === 'Escape') {
-                                        unsetEditable();
-                                    }
-                                    if (e.key === 'Enter') {
-                                        if (target.value.length === 0) return;
-                                        updateName(target.value);
-                                        unsetEditable();
-                                    }
-                                },
-                            }}
-                        />
+                            className={twMerge(
+                                'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 bg-black/30 p-1 font-semibold transition-colors',
+                                editable ? getShareholderColors(i).input : getShareholderColors(i).pill,
+                                !editable && 'group cursor-pointer select-none'
+                            )}
+                        >
+                            <Edit className={twMerge('text-white/50', editable && 'text-black/80')} />
+                            {editable ? (
+                                <>
+                                    <FocusableOnMountInput
+                                        placeholder="Имя..."
+                                        defaultValue={shareholder.name}
+                                        onBlur={(e) => {
+                                            if (!e.target.value) {
+                                                deleteShareholder();
+                                            }
+                                            unsetEditable();
+                                        }}
+                                        onKeyDown={(e) => {
+                                            const target = e.target as EventTarget & HTMLInputElement;
+                                            if (e.key === 'Escape') {
+                                                unsetEditable();
+                                            }
+                                            if (e.key === 'Enter') {
+                                                if (target.value.length === 0) return;
+                                                updateName(target.value);
+                                                unsetEditable();
+                                            }
+                                        }}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    {shareholder.name}
+                                    <div className={twMerge('ml-0.5 h-[80%] border-x-1 border-white/10')} />
+                                    <button className="cursor-pointer p-0.5" onMouseDown={deleteShareholder} tabIndex={-1}>
+                                        <Clear width="1em" height="1em" className={twMerge('text-white opacity-50 transition-colors hover:opacity-100')} />
+                                    </button>
+                                </>
+                            )}
+                        </WithClickOutside>
                     );
                 })}
-                <div className="overflow-clip rounded border-y-2 border-transparent bg-black/30 focus-within:bg-black/50 hover:bg-black/50">
+                <label htmlFor="new-shareholder-input" className="flex cursor-pointer items-center overflow-clip rounded-lg border-transparent bg-black/30">
+                    <div className="pr-1 pl-2 text-xl">+</div>
                     <FocusableOnMountInput
-                        name={''}
+                        id="new-shareholder-input"
                         focusOnMount={false}
                         placeholder="Добавить..."
-                        className="h-9 bg-transparent focus:bg-transparent"
+                        className="h-9 pr-1"
                         onKeyDown={(e) => {
                             const target = e.target as EventTarget & HTMLInputElement;
                             const { value } = target;
@@ -113,9 +99,7 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                                 target.blur();
                             } else if (e.key === 'Enter') {
                                 if (value.length > 0) {
-                                    setShareholders((shareholders) =>
-                                        shareholders.concat({ id: crypto.randomUUID(), name: value })
-                                    );
+                                    setShareholders((shareholders) => shareholders.concat({ id: crypto.randomUUID(), name: value }));
                                     target.value = '';
                                 }
                             }
@@ -124,8 +108,21 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                             e.target.value = '';
                         }}
                     />
-                </div>
+                </label>
             </div>
         </>
     );
+
+    function Header() {
+        return (
+            <h3 className="mx-1 flex justify-between">
+                <span>Между кем делим чек?</span>
+                {shareholders.length > 0 && (
+                    <button className="cursor-pointer text-white/50 underline hover:text-white/80" onClick={() => setShareholders([])}>
+                        Очистить
+                    </button>
+                )}
+            </h3>
+        );
+    }
 }

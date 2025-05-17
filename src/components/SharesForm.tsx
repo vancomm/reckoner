@@ -3,11 +3,13 @@ import { twMerge } from 'tailwind-merge';
 
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
-import { ItemShare, Shareholder, getShareholderClassNames } from '@/lib/shareholder';
+import { ItemShare, Shareholder, getShareholderColors } from '@/lib/shareholder';
 
 import Collapsible from './Collapsible';
 import Edit from './Edit';
 import PillInput from './PillInput';
+import UnfoldLess from './UnfoldLess';
+import { UnfoldMore } from './UnfoldMore';
 
 interface SharesFormProps {
     item: UniqueItem;
@@ -17,13 +19,7 @@ interface SharesFormProps {
     findOneItemShare: (props: { item: UniqueItem; shareholderId: string }) => ItemShare | undefined;
 }
 
-export default function SharesForm({
-    item,
-    shareholders,
-    itemShares,
-    setItemShares,
-    findOneItemShare,
-}: SharesFormProps) {
+export default function SharesForm({ item, shareholders, itemShares, setItemShares, findOneItemShare }: SharesFormProps) {
     const [collapsed, setCollapsed] = React.useState(true);
 
     const isFilled = itemShares.some((r) => r.share > 0);
@@ -36,7 +32,91 @@ export default function SharesForm({
         .filter(({ share }) => share > 0);
 
     return (
-        <div className="flex flex-col gap-y-4 rounded-md bg-black/20 px-4 pt-3 pb-2 sm:p-5">
+        <div className="flex flex-col rounded-md bg-black/20 pb-2">
+            <div className="flex flex-col gap-y-4 px-4 pt-3 pb-2 sm:p-5">
+                <ItemDescription />
+
+                <div className="flex flex-wrap items-end gap-2">
+                    {shareholders.map((shareholder, index) => {
+                        const id = `${item.name}-${item.index}-${index}`;
+                        const checked = (findOneItemShare({ item, shareholderId: shareholder.id })?.share ?? 0) > 0;
+                        return (
+                            <label
+                                key={id}
+                                htmlFor={id}
+                                className={twMerge(
+                                    'cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors select-none active:border-0 sm:rounded-lg',
+                                    getShareholderColors(index).checkbox
+                                )}
+                            >
+                                <input
+                                    id={id}
+                                    className="hidden"
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={(e) => {
+                                        const updated: ItemShare = {
+                                            item,
+                                            shareholder,
+                                            share: e.target.checked ? 1 : 0,
+                                        };
+                                        setItemShares((xs) => {
+                                            const previous = xs.find((x) => x.item === item && x.shareholder.id === shareholder.id);
+                                            return previous ? xs.map((x) => (x === previous ? updated : x)) : [...xs, updated];
+                                        });
+                                    }}
+                                />
+                                <div className="flex items-center gap-1">
+                                    <div className="font-mono">{checked ? '-' : '+'}</div>
+                                    <div>{shareholder.name}</div>
+                                </div>
+                            </label>
+                        );
+                    })}
+                </div>
+                <div
+                    className={twMerge('grid h-4 min-h-1 grid-flow-col overflow-hidden rounded bg-white/10 transition-colors', isFilled && `grid-cols-(--sharebar-columns)`)}
+                    style={{
+                        '--sharebar-columns': activeShareholders.map(({ share }) => `${share}fr`).join(' '),
+                    }}
+                >
+                    {activeShareholders.map(({ index }) => (
+                        <div key={index} className={getShareholderColors(index).shareBar} />
+                    ))}
+                </div>
+            </div>
+
+            {activeShareholders.length > 1 && (
+                <div className="px-5">
+                    <label htmlFor={`expand-${item.index}`} className="flex cursor-pointer items-center text-white/60 select-none hover:text-white">
+                        <input type="checkbox" id={`expand-${item.index}`} className="hidden" checked={!collapsed} onChange={(e) => setCollapsed(!e.target.checked)} />
+                        {collapsed ? <UnfoldMore className="transform-[scale(1.2)]" /> : <UnfoldLess className="transform-[scale(1.2)]" />}
+                        <div>{'пропорции'}</div>
+                    </label>
+                    <Collapsible open={!collapsed} className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center justify-center gap-x-2">
+                        {activeShareholders.map(({ shareholder, share }, i) => (
+                            <React.Fragment key={i}>
+                                <div>{shareholder.name}:</div>
+                                <ShareInput
+                                    share={share}
+                                    setShare={(share) => {
+                                        const updated: ItemShare = { item, shareholder, share };
+                                        setItemShares((records) => {
+                                            const stale = records.find((r) => r.item === item && r.shareholder.id === shareholder.id);
+                                            return stale ? records.map((r) => (r === stale ? updated : r)) : [...records, updated];
+                                        });
+                                    }}
+                                />
+                            </React.Fragment>
+                        ))}
+                    </Collapsible>{' '}
+                </div>
+            )}
+        </div>
+    );
+
+    function ItemDescription() {
+        return (
             <div>
                 <h3 className="font-mono text-xl" id={encodeURIComponent(`${item.index}-${item.name}`)}>
                     {item.name}
@@ -53,100 +133,8 @@ export default function SharesForm({
                     )}
                 </h3>
             </div>
-            <div className="flex flex-wrap gap-2">
-                {shareholders.map((shareholder, index) => {
-                    const id = `${item.name}-${item.index}-${index}`;
-                    const checked = (findOneItemShare({ item, shareholderId: shareholder.id })?.share ?? 0) > 0;
-                    return (
-                        <label
-                            key={id}
-                            htmlFor={id}
-                            className={twMerge(
-                                'cursor-pointer rounded-sm bg-[rgba(0,0,0,.2)] px-2 py-1 transition-colors select-none hover:bg-[rgba(0,0,0,.3)]',
-                                checked && getShareholderClassNames(index).bg,
-                                checked && 'text-black'
-                            )}
-                        >
-                            <input
-                                id={id}
-                                className="hidden"
-                                type="checkbox"
-                                checked={checked}
-                                onChange={(e) => {
-                                    const updated: ItemShare = {
-                                        item,
-                                        shareholder,
-                                        share: e.target.checked ? 1 : 0,
-                                    };
-                                    setItemShares((xs) => {
-                                        const previous = xs.find(
-                                            (x) => x.item === item && x.shareholder.id === shareholder.id
-                                        );
-                                        return previous
-                                            ? xs.map((x) => (x === previous ? updated : x))
-                                            : [...xs, updated];
-                                    });
-                                }}
-                            />
-                            <div className="flex items-center gap-1">
-                                <div className="font-mono">{checked ? '-' : '+'}</div>
-                                <div>{shareholder.name}</div>
-                            </div>
-                        </label>
-                    );
-                })}
-            </div>
-            <div
-                className={twMerge(
-                    'grid h-4 min-h-1 grid-flow-col overflow-hidden rounded bg-white/10 transition-colors',
-                    isFilled && `grid-cols-(--sharebar-columns)`
-                )}
-                style={{
-                    '--sharebar-columns': activeShareholders.map(({ share }) => `${share}fr`).join(' '),
-                }}
-            >
-                {activeShareholders.map(({ index }) => (
-                    <div key={index} className={getShareholderClassNames(index).shareBar} />
-                ))}
-            </div>
-            {activeShareholders.length > 1 && (
-                <div>
-                    <label htmlFor={`expand-${item.index}`} className="cursor-pointer select-none">
-                        <input
-                            type="checkbox"
-                            id={`expand-${item.index}`}
-                            checked={!collapsed}
-                            onChange={(e) => setCollapsed(!e.target.checked)}
-                        />{' '}
-                        указать пропорции
-                    </label>
-                    <Collapsible open={!collapsed}>
-                        <div className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center justify-center gap-x-3 gap-y-2">
-                            {activeShareholders.map(({ shareholder, share }, i) => (
-                                <React.Fragment key={i}>
-                                    <div>{shareholder.name}:</div>
-                                    <ShareInput
-                                        share={share}
-                                        setShare={(share) => {
-                                            const updated: ItemShare = { item, shareholder, share };
-                                            setItemShares((records) => {
-                                                const stale = records.find(
-                                                    (r) => r.item === item && r.shareholder.id === shareholder.id
-                                                );
-                                                return stale
-                                                    ? records.map((r) => (r === stale ? updated : r))
-                                                    : [...records, updated];
-                                            });
-                                        }}
-                                    />
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </Collapsible>{' '}
-                </div>
-            )}
-        </div>
-    );
+        );
+    }
 }
 
 interface ShareInputProps {

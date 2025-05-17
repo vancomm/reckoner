@@ -1,5 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto Serif&display=swap');
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
+
+@theme {
+    --font-display: 'Noto Serif', sans-serif;
+}
 
 html {
     font-size: 20px;
