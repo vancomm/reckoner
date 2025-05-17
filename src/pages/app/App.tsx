@@ -3,9 +3,10 @@ import { twMerge } from 'tailwind-merge';
 
 import ReceiptForm from '@/components/ReceiptForm';
 import Results from '@/components/Results';
-import ShareholderForm from '@/components/ShareholderForm';
 import SharesForm from '@/components/SharesForm';
 import WelcomePopup from '@/components/WelcomePopup';
+import NewShareholderInput from '@/features/shareholder/add';
+import EditableShareholderList from '@/features/shareholder/edit';
 import idbCache from '@/lib/idbCache';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder } from '@/lib/shareholder';
@@ -43,7 +44,18 @@ export default function App({ initialShareholders }: AppProps) {
         <>
             <WelcomePopup className="hidden sm:block" />
             <Container>
-                <ShareholderForm shareholders={shareholders} setShareholders={setShareholders} />
+                <h3 className="mx-1 flex justify-between">
+                    <span>Между кем делим чек?</span>
+                    {shareholders.length > 0 && (
+                        <button className="cursor-pointer text-white/50 underline hover:text-white/80" onClick={() => setShareholders([])}>
+                            Очистить
+                        </button>
+                    )}
+                </h3>
+                <div className="flex flex-wrap items-center gap-1">
+                    <EditableShareholderList shareholders={shareholders} setShareholders={setShareholders} />
+                    <NewShareholderInput setShareholders={setShareholders} />
+                </div>
             </Container>
             <Container>
                 <ReceiptForm receiptItems={receiptItems} setReceiptItems={setReceiptItems} />

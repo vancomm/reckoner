@@ -14,7 +14,7 @@ export default function FocusableOnMountInput({ className, focusOnMount = true, 
         if (selectOnMount) ref.current.select();
     }, [focusOnMount, selectOnMount]);
 
-    const [width, setWidth] = React.useState<string>(`${String(props.defaultValue || props.placeholder || '').length + 3}ch`);
+    const [width, setWidth] = React.useState<string>(`${Math.max((props.defaultValue?.toString().length || 0) + 2, (props.placeholder?.length || 0) + 2, 3)}ch`);
 
     return (
         <input
