@@ -1,10 +1,11 @@
+import Replay from '@mui/icons-material/Replay';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import ReceiptForm from '@/components/ReceiptForm';
 import Results from '@/components/Results';
-import SharesForm from '@/components/SharesForm';
 import WelcomePopup from '@/components/WelcomePopup';
+import SharesForm from '@/features/share/edit';
 import NewShareholderInput from '@/features/shareholder/add';
 import EditableShareholderList from '@/features/shareholder/edit';
 import idbCache from '@/lib/idbCache';
@@ -37,18 +38,19 @@ export default function App({ initialShareholders }: AppProps) {
     );
 
     function Container({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-        return <div className={twMerge('flex flex-col gap-2 rounded-2xl bg-black/20 p-3 sm:w-sm md:w-xl', className)} {...props} />;
+        return <div className={twMerge('rounded-2xl bg-black/20 p-3 sm:w-sm md:w-xl', className)} {...props} />;
     }
 
     return (
         <>
             <WelcomePopup className="hidden sm:block" />
-            <Container>
-                <h3 className="mx-1 flex justify-between">
+            <Container className="flex flex-col gap-2">
+                <h3 className="mx-1 flex items-start justify-between">
                     <span>Между кем делим чек?</span>
                     {shareholders.length > 0 && (
-                        <button className="cursor-pointer text-white/50 underline hover:text-white/80" onClick={() => setShareholders([])}>
-                            Очистить
+                        <button className="flex cursor-pointer items-center gap-x-0.5 text-white/60 transition-colors hover:text-white/80" onClick={() => setShareholders([])}>
+                            <Replay fontSize="small" />
+                            <span>сбросить</span>
                         </button>
                     )}
                 </h3>
@@ -57,19 +59,19 @@ export default function App({ initialShareholders }: AppProps) {
                     <NewShareholderInput setShareholders={setShareholders} />
                 </div>
             </Container>
-            <Container>
+            <Container className="flex flex-col gap-2">
                 <ReceiptForm receiptItems={receiptItems} setReceiptItems={setReceiptItems} />
             </Container>
             {!!receiptItems.length && (
-                <Container>
+                <Container className="flex flex-col gap-2">
                     <h3 className="ml-1">Разделите свои покупки:</h3>
                     <div className="flex flex-col gap-2">
                         {receiptItems.map((item) => (
                             <SharesForm
                                 key={item.index}
                                 item={item}
+                                itemShares={itemShares}
                                 shareholders={shareholders}
-                                itemShares={itemShares.filter((x) => x.item === item)}
                                 setItemShares={setItemShares}
                                 findOneItemShare={findOneItemShare}
                             />
@@ -78,7 +80,7 @@ export default function App({ initialShareholders }: AppProps) {
                 </Container>
             )}
             {!!receiptItems.length && (
-                <Container className="gap-0">
+                <Container className="flex flex-col gap-0">
                     <Results shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
                 </Container>
             )}

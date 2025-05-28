@@ -87,7 +87,7 @@ interface ResultsProps {
 }
 
 export default function Results({ shareholders, itemShares, receiptItems }: ResultsProps) {
-    const [openSections, setOpenSections] = React.useState(shareholders);
+    const [openSections, setOpenSections] = React.useState<Shareholder[]>([]);
 
     function Header() {
         return (

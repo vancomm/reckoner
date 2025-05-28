@@ -11,7 +11,7 @@ export default function NewShareholderInput({ setShareholders }: NewShareholderI
             <div className="pr-1 pl-2 text-xl">+</div>
             <FocusableOnMountInput
                 id="new-shareholder-input"
-                focusOnMount={true}
+                focusOnMount={false}
                 placeholder="Добавить..."
                 className="h-9 pr-1"
                 onKeyDown={(e) => {

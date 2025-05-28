@@ -1,0 +1,209 @@
+[
+    {
+        "_id": "6835e8dc87db9af21e5333ec",
+        "createdAt": "2025-05-27T16:31:24+00:00",
+        "ticket": {
+            "document": {
+                "receipt": {
+                    "cashTotalSum": 0,
+                    "code": 3,
+                    "creditSum": 0,
+                    "dateTime": "2025-05-27T19:29:00",
+                    "ecashTotalSum": 306626,
+                    "fiscalDocumentFormatVer": 4,
+                    "fiscalDocumentNumber": 30194,
+                    "fiscalDriveNumber": "7386440700015692",
+                    "fiscalSign": 2550536610,
+                    "fnsUrl": "www.nalog.gov.ru",
+                    "items": [
+                        {
+                            "name": "4255568 COOL COLA Нап.ZERO б/а.ПЭТ 1.5л",
+                            "nds": 1,
+                            "paymentType": 4,
+                            "price": 11499,
+                            "productType": 33,
+                            "productCodeData": {
+                                "gtin": 4600068052971,
+                                "rawProductCode": "01046000680529712152d;ZUdK)Y/nH",
+                                "productIdType": 6,
+                                "sernum": "52d;ZUdK)Y/nH"
+                            },
+                            "quantity": 1,
+                            "sum": 11499
+                        },
+                        {
+                            "name": "3305976 ПЕРЕКРЕСТОК Пакет майка",
+                            "nds": 1,
+                            "paymentType": 4,
+                            "price": 999,
+                            "productType": 1,
+                            "quantity": 1,
+                            "sum": 999
+                        },
+                        {
+                            "name": "4289382 EXPON.Нап.ЭК.КЕФ.к.вк.В-в.450г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 17999,
+                            "productType": 33,
+                            "productCodeData": {
+                                "gtin": 4811258002274,
+                                "rawProductCode": "0104811258002274212U1kzihE",
+                                "productIdType": 6,
+                                "sernum": "2U1kzihE"
+                            },
+                            "quantity": 1,
+                            "sum": 17999
+                        },
+                        {
+                            "name": "78033782 СПз Чиабатта со рж.мук.без.240г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 6999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 6999
+                        },
+                        {
+                            "name": "4101183 EHRM.Пуд.H.PR.мол.вк.шок.200г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 13999,
+                            "productType": 33,
+                            "productCodeData": {
+                                "gtin": 4606779910609,
+                                "rawProductCode": "0104606779910609215HmaFP",
+                                "productIdType": 6,
+                                "sernum": "5HmaFP"
+                            },
+                            "quantity": 1,
+                            "sum": 13999
+                        },
+                        {
+                            "name": "3617315 DR.KOR.Хлебцы КАРАМ.кук-рис.90г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 12499,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 12499
+                        },
+                        {
+                            "name": "3921009 PAST.Изд.мак.П.РИГ.№126 400г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 7999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 7999
+                        },
+                        {
+                            "name": "3368258 Огурцы КОРНИШОНЫ           300г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 19999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 19999
+                        },
+                        {
+                            "name": "81555 ТЕНД.Дорадо охл  1кг",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 89999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1.11,
+                            "sum": 99899
+                        },
+                        {
+                            "name": "4291005 EXPON.Нап.к/м Б-СК.3В1 д.к.500г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 14999,
+                            "productType": 33,
+                            "productCodeData": {
+                                "gtin": 4811258002281,
+                                "rawProductCode": "0104811258002281212Ui8K8Wv",
+                                "productIdType": 6,
+                                "sernum": "2Ui8K8Wv"
+                            },
+                            "quantity": 1,
+                            "sum": 14999
+                        },
+                        {
+                            "name": "3621000 АП Паста арахис.крем.340г",
+                            "nds": 1,
+                            "paymentType": 4,
+                            "price": 29999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 29999
+                        },
+                        {
+                            "name": "3639749 Бананы фас.1кг",
+                            "nds": 1,
+                            "paymentType": 4,
+                            "price": 15999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1.61,
+                            "sum": 25758
+                        },
+                        {
+                            "name": "3676649 Томаты черри МЕДОВЫЕ крас.200г",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 18999,
+                            "productType": 1,
+                            "productCodeDataError": "not supported product type 3",
+                            "quantity": 1,
+                            "sum": 18999
+                        },
+                        {
+                            "name": "3668859 З.ЛИН.Сыр ЛЕГКИЙ 30% 1кг",
+                            "nds": 2,
+                            "paymentType": 4,
+                            "price": 124900,
+                            "productType": 33,
+                            "productCodeData": {
+                                "gtin": 4640021361108,
+                                "rawProductCode": "0104640021361108215p)UeU",
+                                "productIdType": 6,
+                                "sernum": "5p)UeU"
+                            },
+                            "quantity": 0.2,
+                            "sum": 24980
+                        }
+                    ],
+                    "kktRegId": "0008366291015174    ",
+                    "nds10": 21670,
+                    "nds18": 11376,
+                    "operationType": 1,
+                    "operator": "Рогачёва Юлия Рышардовна, Мобильный cотрудник cупермаркета (каc",
+                    "operatorInn": "500408522688",
+                    "prepaidSum": 0,
+                    "properties": {
+                        "propertyName": "X5",
+                        "propertyValue": "B466;POS02-BO-B466;c2728fbf8bd94f859e4d122de7f7882f;a5acbacc841b6525b7edac0156c17bae"
+                    },
+                    "provisionSum": 0,
+                    "requestNumber": 289,
+                    "retailPlace": "B466 Братьев Весниных 2",
+                    "retailPlaceAddress": "115432, 77 - город федерального значения Москва, вн.тер.г. муниципальный округ Даниловский, ,,, б-р Братьев Весниных, Дом 2,,,",
+                    "shiftNumber": 158,
+                    "taxationType": 1,
+                    "appliedTaxationType": 1,
+                    "totalSum": 306626,
+                    "user": "АКЦИОНЕРНОЕ ОБЩЕСТВО \"ТОРГОВЫЙ ДОМ \"ПЕРЕКРЕСТОК\"",
+                    "userInn": "7728029110  "
+                }
+            }
+        }
+    }
+]

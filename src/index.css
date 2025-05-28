@@ -9,3 +9,8 @@
 html {
     font-size: 20px;
 }
+
+/* https://base-ui.com/react/overview/quick-start */
+.root {
+    isolation: isolate;
+}

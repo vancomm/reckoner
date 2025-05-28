@@ -1,5 +1,5 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
+import { twJoin, twMerge } from 'tailwind-merge';
 
 import Clear from '@/components/Clear';
 import Edit from '@/components/Edit';
@@ -15,7 +15,7 @@ interface EditableShareholderListProps {
 export default function EditableShareholderList({ shareholders, setShareholders }: EditableShareholderListProps) {
     const [editableShareholderId, setEditableShareholderId] = React.useState<string>();
 
-    return shareholders?.map(function EditableShareholder(shareholder, i) {
+    return shareholders?.map((shareholder, index) => {
         const editable = shareholder.id === editableShareholderId;
         const updateName = (name: string) => {
             setShareholders((shareholders) => shareholders.map((sh) => (sh.id === shareholder.id ? { ...shareholder, name } : sh)));
@@ -25,6 +25,7 @@ export default function EditableShareholderList({ shareholders, setShareholders 
         };
         const setEditable = () => setEditableShareholderId(shareholder.id);
         const unsetEditable = () => setEditableShareholderId(undefined);
+        const colors = getShareholderColors(index);
 
         return (
             <WithClickOutside
@@ -35,13 +36,12 @@ export default function EditableShareholderList({ shareholders, setShareholders 
                 onClick={() => {
                     if (!editable) setEditable();
                 }}
-                className={twMerge(
-                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 bg-black/30 p-1 font-semibold transition-colors',
-                    editable ? getShareholderColors(i).input : getShareholderColors(i).pill,
-                    !editable && 'group cursor-pointer select-none'
+                className={twJoin(
+                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 font-semibold transition-colors',
+                    editable ? [colors.input] : ['group cursor-pointer bg-black/30 select-none', colors.pill]
                 )}
             >
-                <Edit className={twMerge('text-white/50', editable && 'text-black/80')} />
+                <Edit className={twJoin(editable ? 'text-black/80' : 'text-white/50')} />
                 {editable ? (
                     <FocusableOnMountInput
                         placeholder="Имя..."

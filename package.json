@@ -10,6 +10,11 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@base-ui-components/react": "1.0.0-alpha.8",
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/icons-material": "^7.1.0",
+        "@mui/material": "^7.1.0",
         "@tailwindcss/typography": "^0.5.16",
         "@tanstack/react-router": "^1.117.1",
         "@tanstack/react-router-devtools": "^1.117.1",

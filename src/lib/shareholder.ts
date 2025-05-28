@@ -92,6 +92,6 @@ const shareholderColors = [
 
 export type ShareholderColors = Partial<(typeof shareholderColors)[number]>;
 
-export function getShareholderColors(i: number) {
-    return shareholderColors[i % shareholderColors.length];
+export function getShareholderColors(index: number): ShareholderColors {
+    return shareholderColors[index % shareholderColors.length];
 }

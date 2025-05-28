@@ -8,7 +8,7 @@ import idbCache from '@/lib/idbCache';
 
 import ExpandMore from './ExpandMore';
 
-const manualSources = ['./md/1.md', './md/2.md', './md/3.md', './md/4.md'] as const;
+const manualSources = ['./md/1.md', './md/2.md'] as const;
 
 export default function WelcomePopup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     const [pages, setPages] = React.useState<string[]>([]);
@@ -73,7 +73,7 @@ export default function WelcomePopup({ className, ...props }: React.HTMLAttribut
                         }}
                     >
                         {pages.map((page, i) => (
-                            <Carousel.Item key={`carousel-item-${i}`} id={`carousel-item-${i}`} className="prose prose-sm dark:prose-invert leading-5">
+                            <Carousel.Item key={`carousel-item-${i}`} id={`carousel-item-${i}`} className="prose-sm prose-invert leading-5">
                                 <Markdown>{page}</Markdown>
                             </Carousel.Item>
                         ))}

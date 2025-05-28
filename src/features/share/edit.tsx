@@ -1,15 +1,14 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
+import { twJoin, twMerge } from 'tailwind-merge';
 
+import MyCollapsible from '@/components/Collapsible';
+import Edit from '@/components/Edit';
+import PillInput from '@/components/PillInput';
+import UnfoldLess from '@/components/UnfoldLess';
+import { UnfoldMore } from '@/components/UnfoldMore';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder, getShareholderColors } from '@/lib/shareholder';
-
-import Collapsible from './Collapsible';
-import Edit from './Edit';
-import PillInput from './PillInput';
-import UnfoldLess from './UnfoldLess';
-import { UnfoldMore } from './UnfoldMore';
 
 interface SharesFormProps {
     item: UniqueItem;
@@ -22,7 +21,7 @@ interface SharesFormProps {
 export default function SharesForm({ item, shareholders, itemShares, setItemShares, findOneItemShare }: SharesFormProps) {
     const [collapsed, setCollapsed] = React.useState(true);
 
-    const isFilled = itemShares.some((r) => r.share > 0);
+    // const isFilled = itemShares.some((r) => r.share > 0);
     const activeShareholders = shareholders
         .map((shareholder, index) => ({
             shareholder,
@@ -45,7 +44,7 @@ export default function SharesForm({ item, shareholders, itemShares, setItemShar
                                 key={id}
                                 htmlFor={id}
                                 className={twMerge(
-                                    'cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors select-none active:border-0 sm:rounded-lg',
+                                    'cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors select-none active:border-0',
                                     getShareholderColors(index).checkbox
                                 )}
                             >
@@ -73,15 +72,38 @@ export default function SharesForm({ item, shareholders, itemShares, setItemShar
                             </label>
                         );
                     })}
+                    <label htmlFor={`select-all-${item.index}`}>
+                        <input
+                            id={`select-all-${item.index}`}
+                            type="checkbox"
+                            className="hidden"
+                            checked={itemShares.length === shareholders.length}
+                            onChange={() => {
+                                if (itemShares.length !== shareholders.length) {
+                                    setItemShares(
+                                        shareholders.map((shareholder) => ({
+                                            item,
+                                            share: 1,
+                                            shareholder,
+                                        }))
+                                    );
+                                } else {
+                                    setItemShares([]);
+                                }
+                            }}
+                        />
+                        Выбрать всех
+                    </label>
                 </div>
+
                 <div
-                    className={twMerge('grid h-4 min-h-1 grid-flow-col overflow-hidden rounded bg-white/10 transition-colors', isFilled && `grid-cols-(--sharebar-columns)`)}
+                    className={twMerge('grid min-h-4 grid-flow-col grid-cols-(--sharebar-columns) overflow-hidden rounded bg-white/10')}
                     style={{
                         '--sharebar-columns': activeShareholders.map(({ share }) => `${share}fr`).join(' '),
                     }}
                 >
                     {activeShareholders.map(({ index }) => (
-                        <div key={index} className={getShareholderColors(index).shareBar} />
+                        <div key={index} className={twJoin(getShareholderColors(index).shareBar)} />
                     ))}
                 </div>
             </div>
@@ -93,7 +115,7 @@ export default function SharesForm({ item, shareholders, itemShares, setItemShar
                         {collapsed ? <UnfoldMore className="transform-[scale(1.2)]" /> : <UnfoldLess className="transform-[scale(1.2)]" />}
                         <div>{'пропорции'}</div>
                     </label>
-                    <Collapsible open={!collapsed} className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center justify-center gap-x-2">
+                    <MyCollapsible open={!collapsed} className="mt-2 grid w-fit grid-cols-[1fr_min-content] items-center justify-center gap-x-2">
                         {activeShareholders.map(({ shareholder, share }, i) => (
                             <React.Fragment key={i}>
                                 <div>{shareholder.name}:</div>
@@ -109,7 +131,7 @@ export default function SharesForm({ item, shareholders, itemShares, setItemShar
                                 />
                             </React.Fragment>
                         ))}
-                    </Collapsible>{' '}
+                    </MyCollapsible>{' '}
                 </div>
             )}
         </div>
@@ -118,7 +140,7 @@ export default function SharesForm({ item, shareholders, itemShares, setItemShar
     function ItemDescription() {
         return (
             <div>
-                <h3 className="font-mono text-xl" id={encodeURIComponent(`${item.index}-${item.name}`)}>
+                <h3 className="font-mono text-xl break-all" id={encodeURIComponent(`${item.index}-${item.name}`)}>
                     {item.name}
                 </h3>
                 <h3 className="flex gap-1 text-sm">
