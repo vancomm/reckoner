@@ -28,7 +28,13 @@ export default function NewShareholderInput({ setShareholders }: NewShareholderI
                     }
                 }}
                 onBlur={(e) => {
-                    e.target.value = '';
+                    console.log(e.target.value);
+
+                    const { value } = e.target;
+                    if (value.length > 0) {
+                        setShareholders((shareholders) => shareholders.concat({ id: crypto.randomUUID(), name: value }));
+                        e.target.value = '';
+                    }
                 }}
             />
         </label>

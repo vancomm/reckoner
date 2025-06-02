@@ -1,3 +1,5 @@
+import ContentCopy from '@mui/icons-material/ContentCopy';
+import Launch from '@mui/icons-material/Launch';
 import { Link } from '@tanstack/react-router';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -5,12 +7,11 @@ import { twMerge } from 'tailwind-merge';
 import Collapsible from '@/components/Collapsible';
 import ExpandMore from '@/components/ExpandMore';
 import Fraction from '@/components/Fraction';
+import UnfoldLess from '@/components/UnfoldLess';
+import { UnfoldMore } from '@/components/UnfoldMore';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder, ShareholderColors, getShareholderColors } from '@/lib/shareholder';
-
-import UnfoldLess from './UnfoldLess';
-import { UnfoldMore } from './UnfoldMore';
 
 type ResultsRecord = ItemShare & { shares: number };
 
@@ -25,6 +26,8 @@ interface ResultsSectionProps {
 function ResultsSection({ expanded = true, toggleExpanded, header, records, colors }: ResultsSectionProps) {
     const totalAmount = records.map((r) => r.item.sum * (r.share / r.shares)).reduce((sum, add) => sum + add, 0);
 
+    const ref = React.useRef(null!);
+
     function Header() {
         return (
             <div
@@ -33,16 +36,33 @@ function ResultsSection({ expanded = true, toggleExpanded, header, records, colo
                     colors?.collapsibleHeader,
                     'bg-transparent'
                 )}
-                onClick={toggleExpanded}
             >
-                <button className="flex items-center">
+                <button className="flex flex-1 items-center" onClick={toggleExpanded}>
                     <ExpandMore
                         style={{ '--rotate': expanded ? '180deg' : '0' }}
                         className={twMerge('ml-1 rotate-(--rotate) opacity-60 transition-transform group-hover:opacity-80')}
                     />
                     <h3 className="ml-0.5">{header}</h3>
                 </button>
-                {!expanded && <span className={twMerge('font-mono font-bold')}>{formatMoney(totalAmount)}</span>}
+                {!expanded && (
+                    <div
+                        ref={ref}
+                        className={twMerge('flex cursor-pointer items-center gap-x-1 font-mono font-bold')}
+                        onClick={() => {
+                            navigator.clipboard.writeText(formatMoney(totalAmount));
+                            const selection = window.getSelection();
+                            if (selection) {
+                                const range = new Range();
+                                range.setStart(ref.current, 0);
+                                range.setEnd(ref.current, 1);
+                                selection.addRange(range);
+                            }
+                        }}
+                    >
+                        {formatMoney(totalAmount)}
+                        <ContentCopy sx={{ fontSize: '.9em', opacity: '50%' }} />
+                    </div>
+                )}
             </div>
         );
     }
@@ -59,7 +79,7 @@ function ResultsSection({ expanded = true, toggleExpanded, header, records, colo
                     {records.map(({ item, share, shares }, index) => (
                         <React.Fragment key={`total-${header}-${index}`}>
                             <div className="font-mono text-black/60">{`${index + 1}.`}</div>
-                            <div className="font-mono text-sm">{item.name}</div>
+                            <div className="font-mono text-sm break-all">{item.name}</div>
                             <div className="flex flex-wrap items-center justify-end gap-x-1">
                                 <div className="text-end font-mono">{formatMoney(item.sum)}</div>
                                 <div className="font-mono">×</div>
@@ -86,7 +106,7 @@ interface ResultsProps {
     itemShares: ItemShare[];
 }
 
-export default function Results({ shareholders, itemShares, receiptItems }: ResultsProps) {
+export default function ResultsDisplay({ shareholders, itemShares, receiptItems }: ResultsProps) {
     const [openSections, setOpenSections] = React.useState<Shareholder[]>([]);
 
     function Header() {
@@ -115,41 +135,40 @@ export default function Results({ shareholders, itemShares, receiptItems }: Resu
     }
 
     function Bang() {
-        return <div className="bg-c mr-0.5 rounded-full bg-white/30 px-1.5 text-xs font-bold text-white">!</div>;
+        return <div className="mr-0.5 inline-block aspect-square w-fit rounded-full bg-white/30 px-1.5 text-xs font-bold text-white">!</div>;
     }
 
-    const unfilledItems = receiptItems.filter((item) => !itemShares.some((r) => r.item === item && r.share > 0));
+    const unfilledItems = receiptItems.filter((item) => !itemShares.some((r) => r.item.index === item.index && r.share > 0));
 
     function UnfilledItemsWarning() {
         return (
-            <div className="flex w-fit items-center gap-1 rounded-sm py-0.5 pr-1 text-sm">
+            <div className="grid w-fit grid-cols-[min-content_1fr] gap-1 rounded-sm py-0.5 pr-1 text-sm">
                 <Bang />
-                <h4>
-                    <span className="text-white/60">Не заполнены товары: </span>
-                    {unfilledItems.map((item, i) => (
-                        <React.Fragment key={`${item.index}-${item.name}`}>
-                            {i > 0 && ', '}
-                            <Link to="." hash={encodeURIComponent(`${item.index}-${item.name}`)} className="underline">
-                                {item.name}
-                            </Link>
-                        </React.Fragment>
-                    ))}
-                </h4>
+                <div className="text-white/60">Не заполнены товары:</div>
+
+                {unfilledItems.map((item) => (
+                    <React.Fragment key={`${item.index}-${item.name}`}>
+                        <div />
+                        <Link to="." hash={encodeURIComponent(`${item.index}-${item.name}`)}>
+                            <Launch sx={{ fontSize: '1em', opacity: '60%' }} /> {item.name}
+                        </Link>
+                    </React.Fragment>
+                ))}
             </div>
         );
     }
 
     const itemSharesMap = itemShares.reduce((acc, { item, share }) => {
-        const prev = acc.get(item) ?? 0;
-        acc.set(item, prev + share);
+        const prev = acc.get(item.index) ?? 0;
+        acc.set(item.index, prev + share);
         return acc;
-    }, new Map<UniqueItem, number>());
+    }, new Map<number, number>());
 
     const getTotalsById = (shareholderId: string) =>
         itemShares
             .filter((r) => r.shareholder.id === shareholderId && r.share > 0)
             .reduce((acc, r) => {
-                return [...acc, { ...r, shares: itemSharesMap.get(r.item) ?? r.share }];
+                return [...acc, { ...r, shares: itemSharesMap.get(r.item.index) ?? r.share }];
             }, [] as ResultsRecord[]);
 
     const sections = shareholders.slice().map((shareholder, index) => ({
@@ -184,29 +203,27 @@ export default function Results({ shareholders, itemShares, receiptItems }: Resu
             <div className="flex flex-col">
                 {sections
                     .filter(({ records }) => records.length > 0)
-                    .map(({ shareholder, index, colors, records }) => {
-                        return (
-                            <ResultsSection
-                                expanded={openSections.includes(shareholder)}
-                                toggleExpanded={() => {
-                                    console.log('toggleExpanded');
-                                    setOpenSections((list) => {
-                                        const index = list.indexOf(shareholder);
-                                        if (index === -1) return [...list, shareholder];
-                                        return list.filter((_, i) => i !== index);
-                                    });
-                                }}
-                                colors={colors}
-                                key={`total-card-${index}`}
-                                header={shareholder.name}
-                                records={records}
-                            />
-                        );
-                    })}
+                    .map(({ shareholder, index, colors, records }) => (
+                        <ResultsSection
+                            expanded={openSections.includes(shareholder)}
+                            toggleExpanded={() => {
+                                console.log('toggleExpanded');
+                                setOpenSections((list) => {
+                                    const index = list.indexOf(shareholder);
+                                    if (index === -1) return [...list, shareholder];
+                                    return list.filter((_, i) => i !== index);
+                                });
+                            }}
+                            colors={colors}
+                            key={`total-card-${index}`}
+                            header={shareholder.name}
+                            records={records}
+                        />
+                    ))}
             </div>
-            <div className="not-empty:mt-4">
-                {unfilledItems.length > 0 && <UnfilledItemsWarning />}
+            <div className="flex flex-col gap-y-1 not-empty:mt-4">
                 {shareless.length > 0 && <SharelessWarning />}
+                {unfilledItems.length > 0 && <UnfilledItemsWarning />}
             </div>
         </>
     );

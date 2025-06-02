@@ -11,7 +11,7 @@ export interface ItemShare {
     shareholder: Shareholder;
 }
 
-const shareholderColors = [
+export const shareholderColors = [
     {
         control: 'group-hover:border-black/10 group-hover:text-black/80',
         pill: 'border-orange-300',
