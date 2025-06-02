@@ -1,12 +1,10 @@
-import Replay from '@mui/icons-material/Replay';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import ReceiptForm from '@/components/ReceiptForm';
 import ResultsDisplay from '@/features/results/display';
 import ItemSharesForm from '@/features/share/edit';
-import NewShareholderInput from '@/features/shareholder/add';
-import EditableShareholderList from '@/features/shareholder/edit';
+import ShareholderForm from '@/features/shareholder/form';
 import usePersistentState from '@/hooks/use-persistent-storage';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder } from '@/lib/shareholder';
@@ -16,7 +14,10 @@ export default function App() {
     const [receiptItems, setReceiptItems] = usePersistentState<UniqueItem[]>('receipt-items', []);
     const [itemShares, setItemShares] = usePersistentState<ItemShare[]>('item-shares', []);
 
+    const [shouldFocusShareholderInput, setShouldFocusShareholderInput] = React.useState(false);
+
     React.useEffect(() => {
+        setShouldFocusShareholderInput(true);
         setItemShares((itemShares) =>
             itemShares.filter(({ shareholder }) => shareholders.find((x) => x.id === shareholder.id))
         );
@@ -34,23 +35,12 @@ export default function App() {
 
     return (
         <>
-            <Container className="flex flex-col gap-2">
-                <h3 className="mx-1 flex items-start justify-between">
-                    <span>Между кем делим чек?</span>
-                    {shareholders.length > 0 && (
-                        <button
-                            className="flex cursor-pointer items-center gap-x-0.5 text-white/60 transition-colors hover:text-white/80"
-                            onClick={() => setShareholders([])}
-                        >
-                            <Replay fontSize="small" />
-                            <span>сбросить</span>
-                        </button>
-                    )}
-                </h3>
-                <div className="flex flex-wrap items-center gap-1">
-                    <EditableShareholderList shareholders={shareholders} setShareholders={setShareholders} />
-                    <NewShareholderInput setShareholders={setShareholders} />
-                </div>
+            <Container className="flex flex-col gap-2 bg-transparent">
+                <ShareholderForm
+                    shareholders={shareholders}
+                    setShareholders={setShareholders}
+                    shouldFocus={shouldFocusShareholderInput}
+                />
             </Container>
 
             <Container className="flex flex-col gap-2">
