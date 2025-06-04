@@ -7,18 +7,19 @@ import FocusableOnMountInput from '@/components/FocusableOnMountInput';
 import WithClickOutside from '@/components/WithClickOutside';
 import { Shareholder, getShareholderColors } from '@/lib/shareholder';
 
-interface EditableShareholderListProps {
+interface ManyShareholdersFormProps {
     shareholders: Shareholder[];
     setShareholders: React.Dispatch<React.SetStateAction<Shareholder[]>>;
 }
 
-export default function EditableShareholderList({ shareholders, setShareholders }: EditableShareholderListProps) {
+export default function ManyShareholdersForm({ shareholders, setShareholders }: ManyShareholdersFormProps) {
     const [editableShareholderId, setEditableShareholderId] = React.useState<string>();
-
-    return shareholders?.map((shareholder, index) => {
+    return shareholders.map((shareholder, index) => {
         const editable = shareholder.id === editableShareholderId;
         const updateName = (name: string) => {
-            setShareholders((shareholders) => shareholders.map((sh) => (sh.id === shareholder.id ? { ...shareholder, name } : sh)));
+            setShareholders((shareholders) =>
+                shareholders.map((sh) => (sh.id === shareholder.id ? { ...shareholder, name } : sh))
+            );
         };
         const deleteShareholder = () => {
             setShareholders((shareholders) => shareholders.filter((sh) => sh.id !== shareholder.id));
@@ -30,18 +31,14 @@ export default function EditableShareholderList({ shareholders, setShareholders 
         return (
             <WithClickOutside
                 key={`name-form-${shareholder.id}`}
-                onClickOutside={() => {
-                    if (editable) unsetEditable();
-                }}
-                onClick={() => {
-                    if (!editable) setEditable();
-                }}
+                onClickOutside={() => editable && unsetEditable()}
+                onClick={() => !editable && setEditable()}
                 className={twJoin(
-                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 font-semibold transition-colors',
-                    editable ? [colors.input] : ['group cursor-pointer bg-black/30 select-none', colors.pill]
+                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 transition-colors',
+                    editable ? [colors.input] : ['group cursor-pointer bg-black/30 select-none', colors.filled]
                 )}
             >
-                <Edit className={twJoin(editable ? 'text-black/80' : 'text-white/50')} />
+                <Edit className={twJoin(editable ? 'text-black/80' : 'text-black/50')} />
                 {editable ? (
                     <FocusableOnMountInput
                         placeholder="Имя..."
@@ -67,9 +64,16 @@ export default function EditableShareholderList({ shareholders, setShareholders 
                 ) : (
                     <>
                         {shareholder.name}
-                        <div className={twMerge('ml-0.5 h-[80%] border-x-1 border-white/10')} />
+                        <div className={twMerge('ml-0.5 h-[80%] border-x-1 border-white/10', colors.activeControl)} />
                         <button className="cursor-pointer p-0.5" onMouseDown={deleteShareholder} tabIndex={-1}>
-                            <Clear width="1em" height="1em" className={twMerge('text-white opacity-50 transition-colors hover:opacity-100')} />
+                            <Clear
+                                width="1em"
+                                height="1em"
+                                className={twMerge(
+                                    'text-white opacity-50 transition-colors hover:opacity-100',
+                                    colors.activeControl
+                                )}
+                            />
                         </button>
                     </>
                 )}

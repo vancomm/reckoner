@@ -1,5 +1,3 @@
-import { styled } from '@mui/material';
-import Button from '@mui/material/Button';
 import React from 'react';
 import { twJoin, twMerge } from 'tailwind-merge';
 
@@ -11,6 +9,14 @@ import { UnfoldMore } from '@/components/UnfoldMore';
 import formatMoney from '@/lib/formatMoney';
 import { UniqueItem } from '@/lib/receiptDocument';
 import { ItemShare, Shareholder, getShareholderColors, shareholderColors } from '@/lib/shareholder';
+
+// function buildGradient(colors: string[]): string {
+//     colors
+//     colors.map((color, i) => {
+//         const percent = 100 / colors.length * i;
+
+//     });
+// }
 
 function ItemTypography({ item }: { item: UniqueItem }) {
     return (
@@ -53,7 +59,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
         .filter(({ share }) => share > 0);
     const allSelected = shareholders.length === selectedShareholders.length;
 
-    function ShareToggle({ shareholder, index }: { shareholder: Shareholder; index: number }) {
+    function ShareholderToggle({ shareholder, index }: { shareholder: Shareholder; index: number }) {
         const id = `${item.name}-${item.index}-${index}`;
         const checked =
             (itemShares.find((x) => x.item.index === item.index && x.shareholder.id === shareholder.id)?.share || 0) >
@@ -63,7 +69,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
             <label
                 htmlFor={id}
                 className={twJoin(
-                    'flex-1 cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors duration-[5s] select-none active:border-0',
+                    'shrink-0 cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors duration-[5s] select-none active:mt-1 active:border-0',
                     getShareholderColors(index).checkbox
                 )}
             >
@@ -177,7 +183,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
         );
     }
 
-    function SelectionToggle() {
+    function SelectAllToggle() {
         return (
             <button
                 className="flex cursor-pointer items-center text-white/60 select-none hover:text-white"
@@ -203,12 +209,12 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
     }
 
     return (
-        <div className="flex flex-col gap-y-4 rounded-2xl bg-black/20 px-4 pt-3 pb-2">
+        <div className="flex flex-col gap-y-4 rounded-2xl bg-black/30 px-4 pt-3 pb-2">
             <ItemTypography item={item} />
 
             <div className="flex flex-wrap items-end gap-2">
                 {shareholders.map((shareholder, index) => (
-                    <ShareToggle
+                    <ShareholderToggle
                         key={`item-${item.index}-shareholder-toggle-${shareholder.id}`}
                         shareholder={shareholder}
                         index={index}
@@ -220,7 +226,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
 
             <div>
                 <div className="flex justify-between">
-                    <SelectionToggle />
+                    <SelectAllToggle />
                     {selectedShareholders.length > 1 && <ShowTextInputsToggle />}
                 </div>
 
