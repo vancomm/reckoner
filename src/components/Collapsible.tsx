@@ -13,7 +13,7 @@ export default function Collapsible({ open, className, style, ...props }: Collap
         if (ref.current) {
             setHeight(ref.current.scrollHeight);
         }
-    }, []);
+    }, [setHeight, ref]);
 
     return (
         <div

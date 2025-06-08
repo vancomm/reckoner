@@ -37,7 +37,7 @@ function Root() {
                     </div>
                 </h1>
             </header>
-            <main className="mx-2 flex grow flex-col gap-4 md:max-w-xl">
+            <main className="mx-2 flex grow flex-col gap-4 md:w-xl">
                 <App />
             </main>
             <footer className="mt-64 flex justify-center gap-x-1 text-center text-sm">

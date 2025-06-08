@@ -1,5 +1,5 @@
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CasinoIcon from '@mui/icons-material/Casino';
+import FileUpload from '@mui/icons-material/FileUpload';
 import Replay from '@mui/icons-material/Replay';
 import { Result } from 'neverthrow';
 import React from 'react';
@@ -83,10 +83,10 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
                 </button>
             </div>
 
-            <div className="flex h-12 w-fit overflow-clip rounded-lg border-transparent bg-black/30">
+            <div className="flex flex-wrap items-center gap-x-1 border-transparent md:w-fit">
                 <label
                     htmlFor="receipt-file"
-                    className="flex min-w-fit cursor-pointer items-center gap-x-[0.1em] bg-black/25 px-2 text-sm"
+                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center rounded-lg bg-black/50 px-1 py-3 text-sm font-bold md:px-4"
                 >
                     <input
                         id="receipt-file"
@@ -95,11 +95,11 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
                         accept="application/json"
                         onChange={handleUploadFile}
                     />
-                    <ArrowUpwardIcon sx={{ fontSize: '1.5em' }} className="text-white/40" />
-                    <div className="pr-2">Загрузить с устройства</div>
+                    <FileUpload sx={{ fontSize: '1.5em' }} className="text-white/50" />
+                    <div>Файл с устройства</div>
                 </label>
                 <button
-                    className="flex cursor-pointer items-center px-2 text-start text-sm font-bold"
+                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center gap-x-1 rounded-lg bg-black/30 px-1 py-3 text-sm font-bold md:px-4"
                     onClick={handleLoadDemo}
                 >
                     <CasinoIcon sx={{ fontSize: '1.5em' }} className="text-white/40" />

@@ -1,4 +1,6 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import ErrorIcon from '@mui/icons-material/Error';
 import Launch from '@mui/icons-material/Launch';
 import { Link } from '@tanstack/react-router';
 import React from 'react';
@@ -18,7 +20,7 @@ type ResultsRecord = ItemShare & { shares: number };
 interface ResultsSectionProps {
     records: ResultsRecord[];
     header: string;
-    colors?: ShareholderColors;
+    colors: ShareholderColors;
     expanded?: boolean;
     toggleExpanded?: () => unknown;
 }
@@ -32,37 +34,36 @@ function ResultsSection({ expanded = true, toggleExpanded, header, records, colo
         return (
             <div
                 className={twMerge(
-                    'group flex justify-between border-b-3 border-transparent pt-2 pr-2 pb-0.5 text-lg transition-colors',
-                    colors?.collapsibleHeader,
-                    'bg-transparent'
+                    'group flex justify-between border-b-3 bg-transparent pt-2 pr-2 pb-0.5 text-lg transition-colors',
+                    colors.border
                 )}
             >
                 <button className="flex flex-1 items-center" onClick={toggleExpanded}>
                     <ExpandMore
                         style={{ '--rotate': expanded ? '180deg' : '0' }}
-                        className={twMerge('ml-1 rotate-(--rotate) opacity-60 transition-transform group-hover:opacity-80')}
+                        className={twMerge(
+                            'ml-1 rotate-(--rotate) opacity-60 transition-transform group-hover:opacity-80'
+                        )}
                     />
                     <h3 className="ml-0.5">{header}</h3>
                 </button>
-                {!expanded && (
-                    <div
-                        ref={ref}
-                        className={twMerge('flex cursor-pointer items-center gap-x-1 font-mono font-bold')}
-                        onClick={() => {
-                            navigator.clipboard.writeText(formatMoney(totalAmount));
-                            const selection = window.getSelection();
-                            if (selection) {
-                                const range = new Range();
-                                range.setStart(ref.current, 0);
-                                range.setEnd(ref.current, 1);
-                                selection.addRange(range);
-                            }
-                        }}
-                    >
-                        {formatMoney(totalAmount)}
-                        <ContentCopy sx={{ fontSize: '.9em', opacity: '50%' }} />
-                    </div>
-                )}
+                <div
+                    ref={ref}
+                    className={twMerge('flex cursor-pointer items-center gap-x-1 font-mono font-bold')}
+                    onClick={() => {
+                        navigator.clipboard.writeText(formatMoney(totalAmount));
+                        const selection = window.getSelection();
+                        if (selection) {
+                            const range = new Range();
+                            range.setStart(ref.current, 0);
+                            range.setEnd(ref.current, 1);
+                            selection.addRange(range);
+                        }
+                    }}
+                >
+                    {formatMoney(totalAmount)}
+                    <ContentCopy sx={{ fontSize: '.9em', opacity: '50%' }} />
+                </div>
             </div>
         );
     }
@@ -70,8 +71,11 @@ function ResultsSection({ expanded = true, toggleExpanded, header, records, colo
     return (
         <div>
             <Header />
-            <Collapsible open={expanded} className={twMerge('clip overflow-clip rounded-md px-1', colors?.collapsibleContent)}>
-                <div className="mt-2 grid grid-cols-[min-content_2fr_1fr_min-content] items-start gap-x-1.5 gap-y-1 border-b-2 border-dotted border-black px-2 py-2 text-sm">
+            <Collapsible
+                open={expanded}
+                className={twMerge('overflow-clip px-1 text-black', colors.bgCanvas, colors.border)}
+            >
+                <div className="grid grid-cols-[min-content_2fr_1fr_min-content] items-start gap-x-1.5 gap-y-1 border-b-2 border-dotted border-black px-2 py-2 text-sm">
                     <div />
                     <div className="font-mono text-black/60">Название</div>
                     <div className="text-end font-mono text-black/60">Цена</div>
@@ -83,7 +87,13 @@ function ResultsSection({ expanded = true, toggleExpanded, header, records, colo
                             <div className="flex flex-wrap items-center justify-end gap-x-1">
                                 <div className="text-end font-mono">{formatMoney(item.sum)}</div>
                                 <div className="font-mono">×</div>
-                                <div className="font-mono">{share === shares ? <div>{item.quantity}</div> : <Fraction className="" numerator={share} denominator={shares} />}</div>
+                                <div className="font-mono">
+                                    {share === shares ? (
+                                        <div>{item.quantity}</div>
+                                    ) : (
+                                        <Fraction className="" numerator={share} denominator={shares} />
+                                    )}
+                                </div>
                                 <div className="font-mono">=</div>
                             </div>
                             <div className="text-end font-mono">{formatMoney(item.sum * (share / shares))}</div>
@@ -116,7 +126,10 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
                     <h3>Итоговый чек</h3>
                     {itemShares.length > 0 &&
                         (openSections.length === shareholders.length ? (
-                            <button className="grid cursor-pointer grid-flow-col items-center text-white/70 hover:text-white active:text-white" onClick={() => setOpenSections([])}>
+                            <button
+                                className="grid cursor-pointer grid-flow-col items-center text-white/70 hover:text-white active:text-white"
+                                onClick={() => setOpenSections([])}
+                            >
                                 <UnfoldLess className="transform-[scale(1.2)]" />
                                 свернуть все
                             </button>
@@ -134,29 +147,19 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
         );
     }
 
-    function Bang() {
-        return <div className="mr-0.5 inline-block aspect-square w-fit rounded-full bg-white/30 px-1.5 text-xs font-bold text-white">!</div>;
-    }
-
-    const unfilledItems = receiptItems.filter((item) => !itemShares.some((r) => r.item.index === item.index && r.share > 0));
-
-    function UnfilledItemsWarning() {
-        return (
-            <div className="grid w-fit grid-cols-[min-content_1fr] gap-1 rounded-sm py-0.5 pr-1 text-sm">
-                <Bang />
-                <div className="text-white/60">Не заполнены товары:</div>
-
-                {unfilledItems.map((item) => (
-                    <React.Fragment key={`${item.index}-${item.name}`}>
-                        <div />
-                        <Link to="." hash={encodeURIComponent(`${item.index}-${item.name}`)}>
-                            <Launch sx={{ fontSize: '1em', opacity: '60%' }} /> {item.name}
-                        </Link>
-                    </React.Fragment>
-                ))}
-            </div>
-        );
-    }
+    // function Bang({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    //     return (
+    //         <div
+    //             className={twMerge(
+    //                 'mr-0.5 inline-block aspect-square w-fit rounded-full bg-white/30 px-1.5 text-xs font-bold text-white',
+    //                 className
+    //             )}
+    //             {...props}
+    //         >
+    //             !
+    //         </div>
+    //     );
+    // }
 
     const itemSharesMap = itemShares.reduce((acc, { item, share }) => {
         const prev = acc.get(item.index) ?? 0;
@@ -182,12 +185,12 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
 
     function SharelessWarning() {
         return (
-            <div className="flex items-center gap-1">
-                <Bang />
-                <div className="text-sm text-white/60">
+            <div className="flex gap-x-1 p-2">
+                <ErrorIcon fontSize="small" className="" />
+                <div className="text-sm text-balance">
                     {shareless.map(({ shareholder }, i, arr) => (
                         <React.Fragment key={i}>
-                            <span className="text-white">{shareholder.name}</span>
+                            <span className="font-semibold">{shareholder.name}</span>
                             {i !== arr.length - 1 && (i === arr.length - 2 ? ' и ' : ', ')}
                         </React.Fragment>
                     ))}
@@ -197,13 +200,48 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
         );
     }
 
+    const unfilledItems = receiptItems.filter(
+        (item) => !itemShares.some((r) => r.item.index === item.index && r.share > 0)
+    );
+
+    function UnfilledItemsList() {
+        // const [open, setOpen] = React.useState(false);
+        return (
+            <div className="flex flex-col gap-1 rounded-sm p-1 pb-4">
+                <button className="flex items-center text-lg">
+                    {/* <ExpandMore
+                        style={{ '--rotate': open ? '180deg' : '0' }}
+                        className={twMerge(
+                            'ml-1 rotate-(--rotate) opacity-60 transition-transform group-hover:opacity-80'
+                        )}
+                    /> */}
+                    <div className="ml-4 flex items-center gap-x-1">Незаполненные товары:</div>
+                </button>
+                <div className="flex flex-col items-start gap-1 px-3 text-sm">
+                    {unfilledItems.map((item) => (
+                        <Link
+                            to="."
+                            key={`${item.index}-${item.name}`}
+                            hash={encodeURIComponent(`${item.index}-${item.name}`)}
+                            className="rounded-md bg-black/30 px-1 text-balance break-words"
+                        >
+                            <Launch sx={{ fontSize: '1em', opacity: '60%' }} /> {item.name}
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    const filledSections = sections.filter(({ records }) => records.length > 0);
+
     return (
         <>
-            <Header />
-            <div className="flex flex-col">
-                {sections
-                    .filter(({ records }) => records.length > 0)
-                    .map(({ shareholder, index, colors, records }) => (
+            <div className="flex flex-col gap-y-1">
+                <Header />
+
+                <div className="flex flex-col gap-y-1 rounded-lg bg-black/30">
+                    {filledSections.map(({ shareholder, index, colors, records }) => (
                         <ResultsSection
                             expanded={openSections.includes(shareholder)}
                             toggleExpanded={() => {
@@ -220,10 +258,19 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
                             records={records}
                         />
                     ))}
-            </div>
-            <div className="flex flex-col gap-y-1 not-empty:mt-4">
-                {shareless.length > 0 && <SharelessWarning />}
-                {unfilledItems.length > 0 && <UnfilledItemsWarning />}
+                    {filledSections.length === 0 && (
+                        <div className="flex flex-col items-center p-1 pt-3 pb-5">
+                            <AccessTimeIcon sx={{ fontSize: '6em' }} className="text-white/20" />
+                            <span className="text-center text-balance text-white/70">
+                                заполните хотя бы один товар для подсчета чека
+                            </span>
+                        </div>
+                    )}
+                    {shareless.length > 0 && <SharelessWarning />}
+                    <div className="flex flex-col gap-y-1 not-empty:mt-4">
+                        {unfilledItems.length > 0 && <UnfilledItemsList />}
+                    </div>
+                </div>
             </div>
         </>
     );
