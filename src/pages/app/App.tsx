@@ -30,6 +30,8 @@ export default function App() {
         );
     }, [receiptItems, setItemShares]);
 
+    console.log(__VARIANTS__);
+
     return (
         <>
             <div className="flex flex-col gap-2">
@@ -64,7 +66,7 @@ export default function App() {
                             <ItemSharesForm
                                 key={item.index}
                                 item={item}
-                                itemShares={itemShares}
+                                itemShares={itemShares.filter((x) => x.item.index === item.index)}
                                 shareholders={shareholders}
                                 setItemShares={setItemShares}
                             />
@@ -72,10 +74,9 @@ export default function App() {
                     </div>
                 </div>
             )}
+
             {!!receiptItems.length && (
-                <div className="flex flex-col gap-0">
-                    <ResultsDisplay shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
-                </div>
+                <ResultsDisplay shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
             )}
         </>
     );

@@ -2,6 +2,7 @@
 !eslint.config.js
 !tailwind.config.js
 !vite.config.ts
+!variants.ts
 !/src
 /src/**/*.gen.*
 /src/**/*.gen.*

@@ -7,16 +7,8 @@ import PillInput from '@/components/PillInput';
 import UnfoldLess from '@/components/UnfoldLess';
 import { UnfoldMore } from '@/components/UnfoldMore';
 import formatMoney from '@/lib/formatMoney';
-import { UniqueItem } from '@/lib/receiptDocument';
-import { ItemShare, Shareholder, getShareholderColors, shareholderColors } from '@/lib/shareholder';
-
-// function buildGradient(colors: string[]): string {
-//     colors
-//     colors.map((color, i) => {
-//         const percent = 100 / colors.length * i;
-
-//     });
-// }
+import type { UniqueItem } from '@/lib/receiptDocument';
+import type { ItemShare, Shareholder } from '@/lib/shareholder';
 
 function ItemTypography({ item }: { item: UniqueItem }) {
     return (
@@ -59,7 +51,15 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
         .filter(({ share }) => share > 0);
     const allSelected = shareholders.length === selectedShareholders.length;
 
-    function ShareholderToggle({ shareholder, index }: { shareholder: Shareholder; index: number }) {
+    function ShareholderToggle({
+        shareholder,
+        index,
+        variant,
+    }: {
+        shareholder: Shareholder;
+        index: number;
+        variant: string;
+    }) {
         const id = `${item.name}-${item.index}-${index}`;
         const checked =
             (itemShares.find((x) => x.item.index === item.index && x.shareholder.id === shareholder.id)?.share || 0) >
@@ -67,10 +67,10 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
 
         return (
             <label
+                data-variant={variant}
                 htmlFor={id}
                 className={twJoin(
-                    'shrink-0 cursor-pointer rounded-lg border-b-4 bg-black/30 px-2 py-1 transition-colors duration-[5s] select-none active:mt-1 active:border-0',
-                    getShareholderColors(index).checkbox
+                    'shrink-0 cursor-pointer rounded-lg border-b-4 border-(--color-secondary) bg-black/30 px-2 py-1 transition-colors duration-[5s] select-none active:mt-1 active:border-0 has-checked:border-(--color-primary) has-checked:bg-(--color-secondary) has-checked:text-black'
                 )}
             >
                 <input
@@ -149,11 +149,9 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
             >
                 {selectedShareholders.map(({ index }) => (
                     <div
+                        data-variant={__VARIANTS__[index % __VARIANTS__.length]}
                         key={index}
-                        className={twMerge(
-                            getShareholderColors(index).shareBar,
-                            index >= shareholderColors.length && 'brightness-75'
-                        )}
+                        className={twMerge('bg-(--color-primary)', index >= __VARIANTS__.length && 'brightness-75')}
                     />
                 ))}
             </div>
@@ -218,6 +216,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
                         key={`item-${item.index}-shareholder-toggle-${shareholder.id}`}
                         shareholder={shareholder}
                         index={index}
+                        variant={__VARIANTS__[index % __VARIANTS__.length]}
                     />
                 ))}
             </div>

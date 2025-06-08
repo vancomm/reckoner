@@ -5,7 +5,7 @@ import Clear from '@/components/Clear';
 import Edit from '@/components/Edit';
 import FocusableOnMountInput from '@/components/FocusableOnMountInput';
 import WithClickOutside from '@/components/WithClickOutside';
-import { Shareholder, getShareholderColors } from '@/lib/shareholder';
+import { Shareholder } from '@/lib/shareholder';
 
 interface ManyShareholdersFormProps {
     shareholders: Shareholder[];
@@ -26,16 +26,20 @@ export default function ManyShareholdersForm({ shareholders, setShareholders }: 
         };
         const setEditable = () => setEditableShareholderId(shareholder.id);
         const unsetEditable = () => setEditableShareholderId(undefined);
-        const colors = getShareholderColors(index);
+
+        const variant = __VARIANTS__[index % __VARIANTS__.length];
 
         return (
             <WithClickOutside
                 key={`name-form-${shareholder.id}`}
+                data-variant={variant}
                 onClickOutside={() => editable && unsetEditable()}
                 onClick={() => !editable && setEditable()}
                 className={twJoin(
-                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 transition-colors',
-                    editable ? [colors.input] : ['group cursor-pointer bg-black/30 select-none', colors.filled]
+                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 text-black transition-colors',
+                    editable
+                        ? 'border-(--color-secondary) bg-(--color-primary)'
+                        : 'group cursor-pointer border-(--color-primary) bg-(--color-secondary) select-none'
                 )}
             >
                 <Edit className={twJoin(editable ? 'text-black/80' : 'text-black/50')} />
@@ -64,14 +68,13 @@ export default function ManyShareholdersForm({ shareholders, setShareholders }: 
                 ) : (
                     <>
                         {shareholder.name}
-                        <div className={twMerge('ml-0.5 h-[80%] border-x-1 border-white/10', colors.activeControl)} />
+                        <div className={twMerge('ml-0.5 h-[80%] border-x-1 border-black/10 text-black/80')} />
                         <button className="cursor-pointer p-0.5" onMouseDown={deleteShareholder} tabIndex={-1}>
                             <Clear
                                 width="1em"
                                 height="1em"
                                 className={twMerge(
-                                    'text-white opacity-50 transition-colors hover:opacity-100',
-                                    colors.activeControl
+                                    'border-black/10 text-black/80 opacity-50 transition-colors hover:opacity-100'
                                 )}
                             />
                         </button>
