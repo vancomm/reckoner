@@ -33,8 +33,8 @@ export default function App() {
     console.log(__VARIANTS__);
 
     return (
-        <>
-            <div className="flex flex-col gap-2">
+        <main className="mx-2 flex grow flex-col gap-16 md:w-xl">
+            <div className="flex flex-col gap-4">
                 <div className="flex items-start justify-between md:justify-start md:gap-x-4">
                     <h3 className="ml-1">Давайте знакомиться!</h3>
                     {shareholders.length > 0 && <Reset onClick={() => setShareholders([])} />}
@@ -51,17 +51,19 @@ export default function App() {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-                <ReceiptItemsForm receiptItems={receiptItems} setReceiptItems={setReceiptItems} />
-            </div>
+            {shareholders.length > 0 && (
+                <div className="flex flex-col gap-4">
+                    <ReceiptItemsForm receiptItems={receiptItems} setReceiptItems={setReceiptItems} />
+                </div>
+            )}
 
-            {!!receiptItems.length && (
-                <div className="flex flex-col gap-y-2">
+            {receiptItems.length > 0 && (
+                <div className="flex flex-col gap-y-4">
                     <div className="flex items-start justify-between md:justify-start md:gap-x-4">
                         <h3 className="ml-1">Разделите свои покупки:</h3>
                         {shareholders.length > 0 && <Reset onClick={() => setItemShares([])} />}
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-y-10">
                         {receiptItems.map((item) => (
                             <ItemSharesForm
                                 key={item.index}
@@ -78,6 +80,6 @@ export default function App() {
             {!!receiptItems.length && (
                 <ResultsDisplay shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
             )}
-        </>
+        </main>
     );
 }

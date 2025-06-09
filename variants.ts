@@ -1,4 +1,12 @@
 import fsp from 'node:fs/promises';
+import * as path from 'node:path';
+
+export async function generateVariants() {
+    const variants = await parseCSSVariants();
+    console.log(`import.meta.dirname=${import.meta.dirname}`);
+    const ts = `export const VARIANTS = [${variants.map((x) => `'${x}'`).join(', ')}] as const;`;
+    await fsp.writeFile(path.join(import.meta.dirname, 'src/variants.gen.ts'), ts);
+}
 
 export default async function parseCSSVariants() {
     const variants: Array<string> = [];

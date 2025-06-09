@@ -109,13 +109,13 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
 
     const tabs = [
         ...results.map((props) => <ShareholderReceipt key={`results-${props.index}`} {...props} />),
-        <div className="flex flex-col items-start gap-2 rounded-md bg-black/30 p-2">
+        <div className="flex flex-col items-start gap-2 rounded-md p-2">
             {unfilledItems.map((item) => (
                 <Link
                     to="."
                     key={`${item.index}-${item.name}`}
-                    hash={encodeURIComponent(`${item.index}-${item.name}`)}
-                    className="rounded-md bg-black/30 p-1 text-balance break-words"
+                    hash={encodeURIComponent(`item-${item.name}-${item.index}`)}
+                    className="shadow-red-black/50 rounded-md bg-black/60 p-1 text-balance break-words shadow-md"
                 >
                     <Launch sx={{ fontSize: '1em', opacity: '60%' }} /> {item.name}
                 </Link>
@@ -128,7 +128,7 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
             <h3 className="text-lg font-bold">Итоговый чек</h3>
 
             <div className="flex flex-col gap-y-2">
-                <div className="flex flex-wrap justify-between gap-x-1 rounded-md bg-black/30 p-1">
+                <div className="flex flex-wrap gap-x-1 rounded-md bg-black/30 p-1">
                     {[
                         ...results.map(({ shareholder, variant, records }, index) => (
                             <div
@@ -136,8 +136,8 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
                                 data-variant={variant}
                                 className={twMerge(
                                     'text-md flex cursor-pointer items-center gap-0.5 rounded-lg px-2 pt-1 pb-0.5 underline select-none',
-                                    index === activeTab && 'bg-[var(--color-primary)] text-black no-underline',
-                                    records.length === 0 && 'cursor-not-allowed text-white/50'
+                                    index === activeTab && 'bg-[var(--color-primary)] text-black',
+                                    records.length === 0 && 'cursor-not-allowed text-white/50 no-underline'
                                 )}
                                 onClick={() => records.length > 0 && setActiveTab(index)}
                             >
@@ -148,8 +148,8 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
                         <div
                             key={'results-unfilled'}
                             className={twMerge(
-                                'text-md ml-auto flex cursor-pointer items-center gap-x-1 rounded-md px-2 pt-1 pb-0.5 text-white underline select-none',
-                                shareholders.length === activeTab && 'bg-white text-black no-underline'
+                                'text-md flex cursor-pointer items-center gap-x-1 rounded-md px-2 pt-1 pb-0.5 text-white underline select-none',
+                                shareholders.length === activeTab && 'bg-white text-black'
                             )}
                             onClick={() => setActiveTab(shareholders.length)}
                         >

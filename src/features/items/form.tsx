@@ -83,7 +83,7 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
                 </button>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-1 border-transparent md:w-fit">
+            <div className="flex flex-wrap items-center gap-x-1 gap-y-2 border-transparent md:w-fit">
                 <label
                     htmlFor="receipt-file"
                     className="flex min-w-fit grow-1 cursor-pointer items-center justify-center rounded-lg bg-black/50 px-1 py-3 text-sm font-bold md:px-4"
@@ -105,15 +105,14 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
                     <CasinoIcon sx={{ fontSize: '1.5em' }} className="text-white/40" />
                     <div>Демо</div>
                 </button>
+                {(errorMessage || !!receiptItems.length) && (
+                    <div className={twMerge('px-2 text-sm', receiptItems.length ? '' : '')}>
+                        {errorMessage
+                            ? `✘ ${errorMessage}`
+                            : !!receiptItems.length && `✔ найдено позиций: ${receiptItems.length}`}
+                    </div>
+                )}
             </div>
-
-            {(errorMessage || !!receiptItems.length) && (
-                <div className={twMerge('px-2 text-sm', receiptItems.length ? '' : '')}>
-                    {errorMessage
-                        ? `✘ ${errorMessage}`
-                        : !!receiptItems.length && `✔ найдено позиций: ${receiptItems.length}`}
-                </div>
-            )}
         </>
     );
 }

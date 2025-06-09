@@ -1,12 +1,15 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
 
 export interface FocusableOnMountInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     focusOnMount?: boolean;
     selectOnMount?: boolean;
 }
 
-export default function FocusableOnMountInput({ className, focusOnMount = true, selectOnMount = false, ...props }: FocusableOnMountInputProps) {
+export default function FocusableAutoWidthInput({
+    focusOnMount = true,
+    selectOnMount = false,
+    ...props
+}: FocusableOnMountInputProps) {
     const ref = React.useRef<HTMLInputElement>(null!);
 
     React.useEffect(() => {
@@ -14,14 +17,15 @@ export default function FocusableOnMountInput({ className, focusOnMount = true, 
         if (selectOnMount) ref.current.select();
     }, [focusOnMount, selectOnMount]);
 
-    const [width, setWidth] = React.useState<string>(`${Math.max((props.defaultValue?.toString().length || 0) + 2, (props.placeholder?.length || 0) + 2, 3)}ch`);
+    const [width, setWidth] = React.useState<string>(
+        `${Math.max((props.defaultValue?.toString().length || 0) + 2, (props.placeholder?.length || 0) + 2, 3)}ch`
+    );
 
     return (
         <input
             ref={ref}
             type="text"
             style={{ width }}
-            className={twMerge('min-w-[4ch] focus:outline-0', className)}
             {...props}
             onChange={(e) => {
                 props.onChange?.(e);

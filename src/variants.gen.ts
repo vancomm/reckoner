@@ -1,0 +1,1 @@
+export const VARIANTS = ['orange', 'yellow', 'cyan', 'green', 'red', 'lime', 'pink'] as const;

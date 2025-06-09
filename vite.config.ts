@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig, loadEnv } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import parseCSSVariants from './variants';
+import parseCSSVariants, { generateVariants } from './variants';
 
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }) => {
@@ -12,6 +12,7 @@ export default defineConfig(async ({ mode }) => {
     const basePath = env.BASE_PATH || '';
     console.log(`building for ${mode} to mount on base_path=${basePath}`);
     const variants = await parseCSSVariants();
+    await generateVariants();
     return {
         base: basePath,
         plugins: [

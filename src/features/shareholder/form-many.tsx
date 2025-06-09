@@ -3,7 +3,7 @@ import { twJoin, twMerge } from 'tailwind-merge';
 
 import Clear from '@/components/Clear';
 import Edit from '@/components/Edit';
-import FocusableOnMountInput from '@/components/FocusableOnMountInput';
+import FocusableAutoWidthInput from '@/components/FocusableAutoWidthInput';
 import WithClickOutside from '@/components/WithClickOutside';
 import { Shareholder } from '@/lib/shareholder';
 
@@ -44,7 +44,8 @@ export default function ManyShareholdersForm({ shareholders, setShareholders }: 
             >
                 <Edit className={twJoin(editable ? 'text-black/80' : 'text-black/50')} />
                 {editable ? (
-                    <FocusableOnMountInput
+                    <FocusableAutoWidthInput
+                        className="min-w-[4ch] focus:outline-0"
                         placeholder="Имя..."
                         defaultValue={shareholder.name}
                         onBlur={(e) => {
