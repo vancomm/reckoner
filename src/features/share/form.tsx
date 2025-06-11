@@ -12,6 +12,7 @@ import WithClickOutside from '@/components/WithClickOutside';
 import formatMoney from '@/lib/formatMoney';
 import type { UniqueItem } from '@/lib/receiptDocument';
 import type { ItemShare, Shareholder } from '@/lib/shareholder';
+import { VARIANTS } from '@/variants.gen';
 
 interface SharesFormProps {
     item: UniqueItem;
@@ -25,7 +26,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
 
     const shareholderProps = shareholders.map((shareholder, index) => ({
         shareholder,
-        variant: __VARIANTS__[index % __VARIANTS__.length],
+        variant: VARIANTS[index % VARIANTS.length],
         share: itemShares.find((x) => x.shareholder.id === shareholder.id)?.share || 0,
     }));
 
@@ -45,6 +46,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
                 htmlFor={id}
                 className={twJoin(
                     'min-h-9 shrink-0 grow-1 cursor-pointer rounded-lg border-b-4 border-(--color-secondary) bg-black/30 px-2 py-1 transition-colors select-none active:border-t-4 active:border-b-0 active:border-t-transparent has-checked:border-b-(--color-primary) has-checked:bg-(--color-secondary) has-checked:text-black',
+                    checked && 'shadow-md/50',
                     className
                 )}
             >
@@ -96,7 +98,7 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
                 onClickOutside={() => editable && setEditable(false)}
                 onClick={() => !editable && setEditable(true)}
                 className={twJoin(
-                    'flex h-9 shrink-0 grow-1 cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 transition-colors select-none',
+                    'flex h-9 shrink-0 grow-1 cursor-pointer items-center justify-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 shadow-md/50 transition-colors select-none',
                     share > 0
                         ? 'border-(--color-primary) bg-(--color-secondary) text-black'
                         : 'border-(--color-secondary) bg-black/30',
@@ -140,41 +142,11 @@ export default function ItemSharesForm({ item, shareholders, itemShares, setItem
                 )}
             </WithClickOutside>
         );
-
-        // return (
-        //     <PillInput
-        //         editable={editable}
-        //         pillProps={{
-        //             children: (
-        //                 <>
-        //                     <div>{share}</div>
-        //                     <Edit className="fill-white opacity-50 group-hover:opacity-100" />
-        //                 </>
-        //             ),
-        //             onClick: () => setEditable(true),
-        //         }}
-        //         inputProps={{
-        //             defaultValue: share,
-        //             onBlur: () => setEditable(false),
-        //             onChange: (e) => {
-        //                 e.target.value = e.target.value.replace(/[^0-9]/, '');
-        //                 if (e.target.value.length > 0) {
-        //                     setShare(Number(e.target.value));
-        //                 }
-        //             },
-        //             onKeyDown: (e) => {
-        //                 if (e.key === 'Escape' || e.key === 'Enter') {
-        //                     setEditable(false);
-        //                 }
-        //             },
-        //         }}
-        //     />
-        // );
     }
 
     return (
         <div className="flex flex-col gap-y-2">
-            <div className="flex flex-col gap-y-1 rounded-xl bg-black/30 px-2 pt-3 pb-2">
+            <div className="flex flex-col gap-y-1 rounded-xl bg-black/30 px-2 pt-3 pb-2 shadow-md/50">
                 <h3
                     id={encodeURIComponent(`item-${item.name}-${item.index}`)}
                     className="font-mono text-balance break-words"

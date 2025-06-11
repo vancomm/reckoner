@@ -30,20 +30,22 @@ export default function App() {
         );
     }, [receiptItems, setItemShares]);
 
-    console.log(__VARIANTS__);
-
     return (
-        <main className="mx-2 flex grow flex-col gap-16 md:w-xl">
+        <main className="flex grow flex-col gap-16 px-2 md:w-xl">
             <div className="flex flex-col gap-4">
                 <div className="flex items-start justify-between md:justify-start md:gap-x-4">
                     <h3 className="ml-1">Давайте знакомиться!</h3>
                     {shareholders.length > 0 && <Reset onClick={() => setShareholders([])} />}
                 </div>
                 <div className="flex flex-wrap items-center gap-1">
-                    <ManyShareholdersForm shareholders={shareholders} setShareholders={setShareholders} />
+                    <ManyShareholdersForm
+                        className="flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 text-black shadow-md/50 transition-colors"
+                        shareholders={shareholders}
+                        setShareholders={setShareholders}
+                    />
                     <OneShareholderForm
                         id="new-shareholder-input-desktop"
-                        className="flex cursor-pointer items-center overflow-clip rounded-lg border-transparent bg-black/30 md:inline-flex"
+                        className="flex cursor-pointer items-center overflow-clip rounded-lg border-transparent bg-black/30 shadow-md/50 md:inline-flex"
                         setShareholders={setShareholders}
                         shouldFocus={shouldFocusShareholderInput}
                         setShouldFocus={setShouldFocusShareholderInput}

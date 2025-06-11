@@ -9,6 +9,7 @@ import Fraction from '@/components/Fraction';
 import formatMoney from '@/lib/formatMoney';
 import type { UniqueItem } from '@/lib/receiptDocument';
 import type { ItemShare, Shareholder } from '@/lib/shareholder';
+import { VARIANTS } from '@/variants.gen';
 
 type ResultsRecord = ItemShare & { shares: number };
 
@@ -23,7 +24,10 @@ function ShareholderReceipt({ records, variant }: ShareholderReceiptProps) {
     const totalAmount = records.map((r) => r.item.sum * (r.share / r.shares)).reduce((sum, add) => sum + add, 0);
 
     return (
-        <div data-variant={variant} className="overflow-clip rounded-md bg-(--color-canvas) px-1 text-black">
+        <div
+            data-variant={variant}
+            className="overflow-clip rounded-md bg-(--color-canvas) px-1 text-black shadow-lg/30"
+        >
             <div className="grid grid-cols-[min-content_2fr_1fr_min-content] items-start gap-x-1.5 gap-y-1 border-b-2 border-dotted border-black px-2 py-2 text-sm">
                 <div />
                 <div className="font-mono text-black/60">Название</div>
@@ -100,7 +104,7 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
 
     const results = shareholders.map((shareholder, index) => ({
         records: getTotalsById(shareholder.id),
-        variant: __VARIANTS__[index % __VARIANTS__.length],
+        variant: VARIANTS[index % VARIANTS.length],
         shareholder,
         index,
     }));
@@ -109,7 +113,7 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
 
     const tabs = [
         ...results.map((props) => <ShareholderReceipt key={`results-${props.index}`} {...props} />),
-        <div className="flex flex-col items-start gap-2 rounded-md p-2">
+        <div className="flex flex-col items-start gap-2 rounded-md bg-white/20 p-2 inset-shadow-sm">
             {unfilledItems.map((item) => (
                 <Link
                     to="."
@@ -128,7 +132,7 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
             <h3 className="text-lg font-bold">Итоговый чек</h3>
 
             <div className="flex flex-col gap-y-2">
-                <div className="flex flex-wrap gap-x-1 rounded-md bg-black/30 p-1">
+                <div className="flex flex-wrap gap-x-1 rounded-lg bg-black/30 px-1 py-0.5 shadow-md/50">
                     {[
                         ...results.map(({ shareholder, variant, records }, index) => (
                             <div

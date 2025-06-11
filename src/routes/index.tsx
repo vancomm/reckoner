@@ -1,6 +1,10 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import GitHubIcon from '@mui/icons-material/GitHub';
+// import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { createFileRoute } from '@tanstack/react-router';
 
 // import WelcomePopup from '@/components/WelcomePopup';
+// import usePersistentState from '@/hooks/use-persistent-storage';
 import App from '@/pages/app/App';
 
 export const Route = createFileRoute('/')({
@@ -36,26 +40,38 @@ function Logo() {
     );
 }
 
-function Root() {
+function Footer() {
     return (
-        <div className="flex min-h-screen flex-col items-stretch justify-start gap-4 py-2 font-['Helvetica_Neue',Helvetica,Arial,'Lucida_Grande',sans-serif] text-white sm:items-center">
-            <header className="mt-48 flex justify-start rounded-xl px-3 py-4 select-none sm:mt-[400px] sm:flex sm:w-sm sm:items-baseline sm:gap-x-2 md:w-xl md:px-1">
+        <footer className="flex w-full gap-x-1 bg-black/50 py-3 pl-2 text-center text-sm">
+            <a className="flex items-center gap-x-[.1em]" href="https://github.com/vancomm">
+                <GitHubIcon sx={{ fontSize: '1em', translate: '0 -.05em' }} />
+                <span className="underline">vancomm</span>
+            </a>
+            <span>·</span>
+            {new Date(__BUILD_DATE__).getFullYear()}
+        </footer>
+    );
+}
+
+function Root() {
+    // const [showHelp, setShowHelp] = usePersistentState('show-help', true);
+
+    return (
+        <div className="flex flex-col items-stretch font-['Helvetica_Neue',Helvetica,Arial,'Lucida_Grande',sans-serif] text-white md:items-center">
+            <div className="flex flex-row-reverse md:w-xl">
+                {/* <button onClick={() => {}} className="cursor-pointer"> */}
+                <AutoAwesomeIcon fontSize="small" className="mt-4 mr-4 ml-auto md:mr-0" />
+                {/* </button> */}
+                {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
+            </div>
+            <header className="mt-48 mb-4 flex justify-start rounded-xl px-3 py-4 select-none md:w-xl md:px-1 xl:mt-[400px]">
                 <Logo />
             </header>
-            {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
 
             <App />
 
-            <footer className="mt-64 flex justify-center gap-x-1 text-center text-sm">
-                <a
-                    className="underline decoration-white/60 hover:decoration-white"
-                    href="https://github.com/vancomm/reckoner"
-                >
-                    source
-                </a>
-                <span>·</span>
-                {new Date(__BUILD_DATE__).getFullYear()}
-            </footer>
+            <div className="w-full pt-64 shadow-xl/25" />
+            <Footer />
         </div>
     );
 }

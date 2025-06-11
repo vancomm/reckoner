@@ -96,6 +96,9 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.0.0
+      node:
+        specifier: ^24.2.0
+        version: 24.2.0
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1937,8 +1940,16 @@ packages:
     resolution: {integrity: sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==}
     engines: {node: '>=18'}
 
+  node-bin-setup@1.1.4:
+    resolution: {integrity: sha512-vWNHOne0ZUavArqPP5LJta50+S8R261Fr5SvGul37HbEDcowvLjwdvd0ZeSr0r2lTSrPxl6okq9QUw8BFGiAxA==}
+
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
+
+  node@24.2.0:
+    resolution: {integrity: sha512-+LxcguHN48uLeFUdC8w9SGbJhuOklUrCgl0K3dmqhXdokzwd83HKXUbeA8JLd41G+77W9Ovq7FXGCij74Ff/tw==}
+    engines: {npm: '>=5.0.0'}
+    hasBin: true
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -4426,7 +4437,13 @@ snapshots:
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.40.0
 
+  node-bin-setup@1.1.4: {}
+
   node-releases@2.0.19: {}
+
+  node@24.2.0:
+    dependencies:
+      node-bin-setup: 1.1.4
 
   normalize-path@3.0.0: {}
 

@@ -6,13 +6,19 @@ import Edit from '@/components/Edit';
 import FocusableAutoWidthInput from '@/components/FocusableAutoWidthInput';
 import WithClickOutside from '@/components/WithClickOutside';
 import { Shareholder } from '@/lib/shareholder';
+import { VARIANTS } from '@/variants.gen';
 
 interface ManyShareholdersFormProps {
     shareholders: Shareholder[];
     setShareholders: React.Dispatch<React.SetStateAction<Shareholder[]>>;
 }
 
-export default function ManyShareholdersForm({ shareholders, setShareholders }: ManyShareholdersFormProps) {
+export default function ManyShareholdersForm({
+    shareholders,
+    setShareholders,
+    className,
+    ...props
+}: ManyShareholdersFormProps & React.InputHTMLAttributes<HTMLDivElement>) {
     const [editableShareholderId, setEditableShareholderId] = React.useState<string>();
     return shareholders.map((shareholder, index) => {
         const editable = shareholder.id === editableShareholderId;
@@ -27,7 +33,7 @@ export default function ManyShareholdersForm({ shareholders, setShareholders }: 
         const setEditable = () => setEditableShareholderId(shareholder.id);
         const unsetEditable = () => setEditableShareholderId(undefined);
 
-        const variant = __VARIANTS__[index % __VARIANTS__.length];
+        const variant = VARIANTS[index % VARIANTS.length];
 
         return (
             <WithClickOutside
@@ -35,12 +41,13 @@ export default function ManyShareholdersForm({ shareholders, setShareholders }: 
                 data-variant={variant}
                 onClickOutside={() => editable && unsetEditable()}
                 onClick={() => !editable && setEditable()}
-                className={twJoin(
-                    'flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 text-black transition-colors',
+                className={twMerge(
                     editable
                         ? 'border-(--color-secondary) bg-(--color-primary)'
-                        : 'group cursor-pointer border-(--color-primary) bg-(--color-secondary) select-none'
+                        : 'group cursor-pointer border-(--color-primary) bg-(--color-secondary) select-none',
+                    className
                 )}
+                {...props}
             >
                 <Edit className={twJoin(editable ? 'text-black/80' : 'text-black/50')} />
                 {editable ? (

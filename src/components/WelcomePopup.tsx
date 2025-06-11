@@ -73,7 +73,11 @@ export default function WelcomePopup({ className, ...props }: React.HTMLAttribut
                         }}
                     >
                         {pages.map((page, i) => (
-                            <Carousel.Item key={`carousel-item-${i}`} id={`carousel-item-${i}`} className="prose-sm prose-invert leading-5">
+                            <Carousel.Item
+                                key={`carousel-item-${i}`}
+                                id={`carousel-item-${i}`}
+                                className="prose-sm prose-invert leading-5"
+                            >
                                 <Markdown>{page}</Markdown>
                             </Carousel.Item>
                         ))}

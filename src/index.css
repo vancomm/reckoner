@@ -10,6 +10,18 @@ html {
     font-size: 20px;
 }
 
+body {
+    background-image: linear-gradient(
+        to bottom,
+        var(--color-black),
+        var(--color-indigo-900) 10%,
+        var(--color-indigo-800) 15%,
+        var(--color-sky-800),
+        var(--color-fuchsia-900),
+        var(--color-amber-600)
+    );
+}
+
 /* https://base-ui.com/react/overview/quick-start */
 .root {
     isolation: isolate;
