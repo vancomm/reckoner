@@ -57,7 +57,7 @@ function Root() {
     // const [showHelp, setShowHelp] = usePersistentState('show-help', true);
 
     return (
-        <div className="flex flex-col items-stretch font-['Helvetica_Neue',Helvetica,Arial,'Lucida_Grande',sans-serif] text-white md:items-center">
+        <div className="flex min-h-screen flex-col items-stretch font-['Helvetica_Neue',Helvetica,Arial,'Lucida_Grande',sans-serif] text-white md:items-center">
             <div className="flex flex-row-reverse md:w-xl">
                 {/* <button onClick={() => {}} className="cursor-pointer"> */}
                 <AutoAwesomeIcon fontSize="small" className="mt-4 mr-4 ml-auto md:mr-0" />

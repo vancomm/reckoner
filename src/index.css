@@ -11,6 +11,7 @@ html {
 }
 
 body {
+    background-size: auto max(3000px, 100%);
     background-image: linear-gradient(
         to bottom,
         var(--color-black),
@@ -22,9 +23,8 @@ body {
     );
 }
 
-/* https://base-ui.com/react/overview/quick-start */
 .root {
-    isolation: isolate;
+    isolation: isolate; /* https://base-ui.com/react/overview/quick-start */
 }
 
 @layer base {
