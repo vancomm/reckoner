@@ -1,5 +1,5 @@
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import StarIcon from '@mui/icons-material/Star';
 // import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -57,20 +57,20 @@ function Root() {
     // const [showHelp, setShowHelp] = usePersistentState('show-help', true);
 
     return (
-        <div className="flex min-h-screen flex-col items-stretch font-['Helvetica_Neue',Helvetica,Arial,'Lucida_Grande',sans-serif] text-white md:items-center">
-            <div className="flex flex-row-reverse md:w-xl">
+        <div data-route="/" className="flex min-h-screen flex-col items-stretch text-white md:items-center">
+            <div className="mb-48 flex flex-row-reverse md:w-xl">
                 {/* <button onClick={() => {}} className="cursor-pointer"> */}
-                <AutoAwesomeIcon fontSize="small" className="mt-4 mr-4 ml-auto md:mr-0" />
+                <StarIcon sx={{ fontSize: '.65em' }} className="m-6 ml-auto text-amber-100/80 md:mr-0" />
                 {/* </button> */}
                 {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
             </div>
-            <header className="mt-48 mb-4 flex justify-start rounded-xl px-3 py-4 select-none md:w-xl md:px-1 xl:mt-[400px]">
+            <header className="mb-4 flex justify-start rounded-xl px-3 py-4 select-none md:w-xl md:px-1 xl:mt-[400px]">
                 <Logo />
             </header>
 
             <App />
 
-            <div className="w-full pt-64 shadow-xl/25" />
+            <div className="min-h-30 w-full grow shadow-xl/25" />
             <Footer />
         </div>
     );

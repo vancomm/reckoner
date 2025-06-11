@@ -59,7 +59,7 @@ export default function App() {
                 </div>
             )}
 
-            {receiptItems.length > 0 && (
+            {shareholders.length > 0 && receiptItems.length > 0 && (
                 <div className="flex flex-col gap-y-4">
                     <div className="flex items-start justify-between md:justify-start md:gap-x-4">
                         <h3 className="ml-1">Разделите свои покупки:</h3>
@@ -79,7 +79,7 @@ export default function App() {
                 </div>
             )}
 
-            {!!receiptItems.length && (
+            {shareholders.length > 0 && receiptItems.length > 0 && (
                 <ResultsDisplay shareholders={shareholders} itemShares={itemShares} receiptItems={receiptItems} />
             )}
         </main>
