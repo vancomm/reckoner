@@ -153,13 +153,13 @@ export default function ResultsDisplay({ shareholders, itemShares, receiptItems 
                 {
                     [
                         ...results.map((props) => <ShareholderReceipt key={`results-${props.index}`} {...props} />),
-                        <div className="flex flex-col items-start gap-2 rounded-md bg-white/20 p-2 inset-shadow-sm">
+                        <div className="flex flex-col items-start gap-2 rounded-md p-2">
                             {unfilledItems.map((item) => (
                                 <Link
                                     to="."
                                     key={`${item.index}-${item.name}`}
                                     hash={encodeURIComponent(`item-${item.name}-${item.index}`)}
-                                    className="shadow-red-black/50 rounded-md bg-black/60 p-1 text-balance break-words shadow-md"
+                                    className="shadow-red-black/50 rounded-md bg-black/60 p-1 text-balance break-words shadow-md/25"
                                 >
                                     <Launch sx={{ fontSize: '1em', opacity: '60%' }} /> {item.name}
                                 </Link>

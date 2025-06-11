@@ -12,7 +12,7 @@ html {
 }
 
 body {
-    background-size: auto max(3000px, 100%);
+    background-size: auto max(300em, 100%);
     background-image: linear-gradient(
         to bottom,
         var(--color-black),
