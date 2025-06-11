@@ -60,7 +60,7 @@ function Root() {
         <div data-route="/" className="flex min-h-screen flex-col items-stretch text-white md:items-center">
             <div className="mb-48 flex flex-row-reverse md:w-xl">
                 {/* <button onClick={() => {}} className="cursor-pointer"> */}
-                <StarIcon sx={{ fontSize: '.65em' }} className="m-6 ml-auto text-amber-100/80 md:mr-0" />
+                <StarIcon sx={{ fontSize: '.65em' }} className="m-6 ml-auto rotate-12 text-amber-100/80 md:mr-0" />
                 {/* </button> */}
                 {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
             </div>
