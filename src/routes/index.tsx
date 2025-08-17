@@ -8,8 +8,31 @@ import { createFileRoute } from '@tanstack/react-router';
 import App from '@/pages/app/App';
 
 export const Route = createFileRoute('/')({
-    component: Root,
+    component: Index,
 });
+
+function Index() {
+    // const [showHelp, setShowHelp] = usePersistentState('show-help', true);
+
+    return (
+        <div data-route="/" className="flex min-h-screen flex-col items-stretch text-white md:items-center">
+            <div className="mb-48 flex flex-row-reverse md:w-xl">
+                {/* <button onClick={() => {}} className="cursor-pointer"> */}
+                <StarIcon sx={{ fontSize: '.65em' }} className="m-6 ml-auto rotate-12 text-amber-100/80 md:mr-0" />
+                {/* </button> */}
+                {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
+            </div>
+            <header className="mb-4 flex justify-start rounded-xl px-3 py-4 select-none md:w-xl md:px-1">
+                <Logo />
+            </header>
+
+            <App />
+
+            <div className="min-h-30 w-full grow shadow-xl/25" />
+            <Footer />
+        </div>
+    );
+}
 
 function Logo() {
     return (
@@ -50,28 +73,5 @@ function Footer() {
             <span>·</span>
             {new Date(__BUILD_DATE__).getFullYear()}
         </footer>
-    );
-}
-
-function Root() {
-    // const [showHelp, setShowHelp] = usePersistentState('show-help', true);
-
-    return (
-        <div data-route="/" className="flex min-h-screen flex-col items-stretch text-white md:items-center">
-            <div className="mb-48 flex flex-row-reverse md:w-xl">
-                {/* <button onClick={() => {}} className="cursor-pointer"> */}
-                <StarIcon sx={{ fontSize: '.65em' }} className="m-6 ml-auto rotate-12 text-amber-100/80 md:mr-0" />
-                {/* </button> */}
-                {/* <WelcomePopup className="mx-2 block sm:hidden" /> */}
-            </div>
-            <header className="mb-4 flex justify-start rounded-xl px-3 py-4 select-none md:w-xl md:px-1 xl:mt-[400px]">
-                <Logo />
-            </header>
-
-            <App />
-
-            <div className="min-h-30 w-full grow shadow-xl/25" />
-            <Footer />
-        </div>
     );
 }

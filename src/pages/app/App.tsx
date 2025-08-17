@@ -39,13 +39,13 @@ export default function App() {
                 </div>
                 <div className="flex flex-wrap items-center gap-1">
                     <ManyShareholdersForm
-                        className="flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 text-black shadow-md/50 transition-colors"
+                        className="flex h-9 items-center gap-1 overflow-hidden rounded-lg border-b-4 p-1 text-black transition-colors"
                         shareholders={shareholders}
                         setShareholders={setShareholders}
                     />
                     <OneShareholderForm
                         id="new-shareholder-input-desktop"
-                        className="flex cursor-pointer items-center overflow-clip rounded-lg border-transparent bg-black/30 shadow-md/50 md:inline-flex"
+                        className="flex cursor-pointer items-center overflow-clip rounded-lg border-transparent bg-black/30 md:inline-flex"
                         setShareholders={setShareholders}
                         shouldFocus={shouldFocusShareholderInput}
                         setShouldFocus={setShouldFocusShareholderInput}

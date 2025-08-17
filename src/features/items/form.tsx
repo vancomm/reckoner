@@ -86,7 +86,7 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
             <div className="flex flex-wrap items-center gap-x-1 gap-y-2 border-transparent md:w-fit">
                 <label
                     htmlFor="receipt-file"
-                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center rounded-lg bg-black/50 px-1 py-3 text-sm font-bold shadow-md/50 md:px-4"
+                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center rounded-lg bg-black/50 px-1 py-3 text-sm font-bold md:px-4"
                 >
                     <input
                         id="receipt-file"
@@ -99,7 +99,7 @@ export default function ReceiptItemsForm({ receiptItems, setReceiptItems }: Rece
                     <div>Файл с устройства</div>
                 </label>
                 <button
-                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center gap-x-1 rounded-lg bg-black/30 px-1 py-3 text-sm font-bold shadow-md/50 md:px-4"
+                    className="flex min-w-fit grow-1 cursor-pointer items-center justify-center gap-x-1 rounded-lg bg-black/30 px-1 py-3 text-sm font-bold md:px-4"
                     onClick={handleLoadDemo}
                 >
                     <CasinoIcon sx={{ fontSize: '1.5em' }} className="text-white/40" />
